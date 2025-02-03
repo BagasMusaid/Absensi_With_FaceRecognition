@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\master_data;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\master_data\StoreKelasRequest;
+use App\Http\Requests\master_data\UpdateKelasRequest;
 use App\Models\master_data\kelas;
 use App\Models\master_data\Walikelas;
 use Illuminate\Auth\Events\Validated;
@@ -17,21 +19,23 @@ class KelasController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
-        $pickWkId = Kelas::pluck('walikelas_id')->toArray();
-        $walas = Walikelas::with('guru')->whereNotIn('id', $pickWkId)->get();  // Mengambil wali kelas yang belum digunakan
-        $kelasQuery = Kelas::with('walikelas.guru');
+        // $pickWkId = Kelas::pluck('walikelas_id')->toArray();
+        // $walas = Walikelas::with('guru')->whereNotIn('id', $pickWkId)->get();  // Mengambil wali kelas yang belum digunakan
+        $kelasQuery = Kelas::query();
         if ($search) {
             $kelasQuery->where(function ($query) use ($search) {
                 $query->where('nama_kelas', 'like', "%$search%")
-                    ->orWhereHas('walikelas.guru', function ($query) use ($search) {
-                        $query->where('nama_guru', 'like', "%$search%");
-                    });
+                    ->orWhere('tahun_ajaran', 'like', "%$search%")
+                    ->orWhere('catatan', 'like', "%$search%");
             });
         }
         $kelas = $kelasQuery->paginate(5);
+        if ($request->ajax()) {
+            return view('pages.kelas.index', compact('kelas'))->render();
+        }
 
 
-        return view('pages.kelas.index', compact('walas', 'kelas'));
+        return view('pages.kelas.index', compact('kelas'));
     }
 
     /**
@@ -45,24 +49,10 @@ class KelasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreKelasRequest $request)
     {
-
-        $validate = Validator::make($request->all(), [
-            'nama_kelas' => 'required',
-            'walikelas_id' => 'required|exists:walikelas,id'
-        ], [
-            'nama_kelas.regex' => 'Nama Kelas tidak valid',
-            'nama_kelas.required' => 'Nama Kelas Wajib Diisi',
-            'walikelas_id.required' => 'Silahkan Pilih Nama Walikelas',
-        ]);
-
-        if ($validate->fails()) {
-            alert()->error('Gagal Tambah Data', 'Periksa Kembali Inputan Anda');
-            return redirect()->back()->withInput()->withErrors($validate)->with('refresh', true);
-        }
         try {
-            $kelas = kelas::create($request->all());
+            kelas::create($request->validated());
             alert()->success('Success', 'Data Berhasil Ditambahkan');
         } catch (\Exception $e) {
             alert()->error('Gagal', 'Terjadi Kesalahan Saat Menambahkan Data');
@@ -89,28 +79,16 @@ class KelasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateKelasRequest $request, string $id)
     {
-        $validasi = Validator::make($request->all(), [
-            'nama_kelass' => 'required',
-            'nama_walas' => 'required|exists:walikelas,id'
-        ], [
-            'nama_kelass.required' => 'Nama Kelas Wajib Diisi',
-            'nama_walas.required' => 'Silahkan Pilih Nama Walikelas Baru'
-        ]);
-
-        if ($validasi->fails()) {
-            alert()->error('Gagal Update Data', 'Periksa Kembali Inputan Anda');
-            return redirect()->back()->withInput()->withErrors($validasi)->with('refresh', true);
-        };
-
         try {
             kelas::where('id', $id)->update([
                 'nama_kelas' => $request->nama_kelass,
-                'walikelas_id' => $request->nama_walas
+                'tahun_ajaran' => $request->tahun_ajaran,
+                'catatan' => $request->catatan
             ]);
             alert()->success('Berhasil', 'Data Berhasil Diubah');
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             alert()->error('Gagal', 'Terjadi Kesalahan Update Data');
         }
         return redirect()->route('kelas.index');

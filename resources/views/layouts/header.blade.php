@@ -33,35 +33,41 @@
                                 alt="photo profile">
                         </button>
                     </div>
-                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+                    <div class="z-50 hidden my-4 text-base list-none bg-white border divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                         id="dropdown-user">
                         <div class="px-4 py-3" role="none">
                             <p class="text-sm font-semibold text-gray-900 uppercase" role="none">
-                                @if (Auth::guard('guru')->check())
-                                    {{ Auth::guard('guru')->user()->nama_guru }}
+                                @if (Auth::guard('wali')->check())
+                                    {{ Auth::guard('wali')->user()->guru->nama_guru }}
                                 @else
                                     {{ Auth::user()->name }}
                                 @endif
                             </p>
                             <p class="text-sm font-normal text-gray-700 truncate dark:text-gray-300" role="none">
-                                {{ Auth::user()->email }}
+                                @if (Auth::guard('wali')->check())
+                                    {{ Auth::guard('wali')->user()->guru->email }}
+                                @else
+                                    {{ Auth::user()->email }}
+                                @endif
                             </p>
                         </div>
                         <ul class="py-1" role="none">
                             <li>
                                 <a href="{{ url('dashbord') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    class="block px-4 py-2 text-sm {{ active_class(['dashbord']) }} text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Dashboard</a>
                             </li>
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">Settings</a>
-                            </li>
+                                <a href="{{ url('akun') }}"
+                                    class="block px-4 {{ active_class(['akun']) }} py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    role="menuitem">Account</a>
                             </li>
                             <li>
-                                <a href="{{ url('logout') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                <form id="logout-form" action="{{ url('logout') }}" method="GET"
+                                    style="display: none;">
+                                    @csrf
+                                </form>
+                                <a class="logout-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Logout</a>
                             </li>
                         </ul>
@@ -71,3 +77,32 @@
         </div>
     </div>
 </nav>
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.logout-link').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    Swal.fire({
+                        title: 'Konfirmasi',
+                        text: 'Apakah Anda yakin ingin logout?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Logout',
+                        cancelButtonText: 'Batal',
+                        customClass: {
+                            confirmButton: 'bg-red-600 text-white',
+                            cancelButton: 'bg-gray-300 text-gray-700'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('logout-form')
+                                .submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@endpush

@@ -42,9 +42,9 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'guru' => [
+        'wali' => [
             'driver' => 'session',
-            'provider' => 'gurus',
+            'provider' => 'walikelas',
         ],
     ],
 
@@ -70,9 +70,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'gurus' => [
+        'walikelas' => [
             'driver' => 'eloquent',
-            'model' =>  App\Models\presensi\Guru::class,
+            'model' =>  App\Models\master_data\Walikelas::class,
         ],
 
         // 'users' => [
@@ -103,6 +103,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'walikelas' => [
+            'provider' => 'walikelas',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

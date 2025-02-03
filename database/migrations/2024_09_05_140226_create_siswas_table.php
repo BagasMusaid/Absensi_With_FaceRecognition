@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('siswas', function (Blueprint $table) {
             $table->char('kd_siswa', 20)->primary();
+            $table->unsignedBigInteger('kelas_id')->nullable();
+            $table->foreign('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
             $table->string("NIS")->unique();
             $table->string("nama_siswa");
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);

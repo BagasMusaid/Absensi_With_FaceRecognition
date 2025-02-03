@@ -99,9 +99,10 @@
                 </ul>
             </li>
             <li>
-                <button type="button"
-                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                    aria-controls="dropdown-laporan" data-collapse-toggle="dropdown-laporan">
+                <button type="button" id="Report"
+                    class="flex items-center w-full {{ active_class(['laporan-guru', 'laporan-siswa']) }} p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    aria-controls="dropdown-laporan" data-collapse-toggle="dropdown-laporan"
+                    aria-expanded="{{ request()->is(['laporan-guru', 'laporan-siswa']) ? 'true' : 'false' }}">
                     <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <title />
@@ -110,21 +111,23 @@
                         <rect height="128" width="32" x="240" y="32" />
                     </svg>
                     <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">laporan</span>
-                    <svg class="w-3 h-3" aria-hidden="false" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 4 4 4-4" />
+                    <svg id="laporan-icon"
+                        class="feather feather-chevron-left w-5 h-5 transition-transform duration-300 {{ is_active_route(['laporan-guru', 'laporan-siswa']) ? '-rotate-90' : 'rotate-0' }}"
+                        fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
-                <ul id="dropdown-laporan" class="hidden py-2 space-y-2">
+                <ul id="dropdown-laporan"
+                    class="hidden py-2 space-y-2 {{ show_class(['laporan-guru', 'laporan-siswa']) }}"">
                     <li>
                         <a href="#"
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data
                             Presensi</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data
+                        <a href="{{ url('laporan-guru') }}"
+                            class="flex items-center w-full {{ active_class(['laporan-guru']) }} p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data
                             Guru</a>
                     </li>
                     <li>
@@ -133,8 +136,8 @@
                             Mapel</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data
+                        <a href="{{ url('laporan-siswa') }}"
+                            class="flex items-center w-full {{ active_class(['laporan-siswa']) }} p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data
                             Siswa</a>
                     </li>
                 </ul>
@@ -147,8 +150,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const masterDataBtn = document.getElementById('master-data-btn');
+            const reports = document.getElementById('Report')
             const dropdownMenu = document.getElementById('dropdown-example');
+            const dropdownReports = document.getElementById('dropdown-laporan')
             const masterIcon = document.getElementById('master-icon');
+            const laporanIcon = document.getElementById('laporan-icon');
 
             // Perbarui visibilitas dropdown berdasarkan status aria-expanded
             function updateDropdownVisibility() {
@@ -156,11 +162,21 @@
                 dropdownMenu.classList.toggle('hidden', !isExpanded);
             }
 
+            function updateDropdownReports() {
+                const isExpandedReports = reports.getAttribute('aria-expanded') === 'true';
+                dropdownReports.classList.toggle('hidden', !isExpandedReports);
+            }
+            if (reports && laporanIcon) {
+                reports.addEventListener('click', () => {
+                    laporanIcon.classList.toggle('-rotate-90');
+                });
+            }
             if (masterDataBtn && masterIcon) {
                 masterDataBtn.addEventListener('click', () => {
                     masterIcon.classList.toggle('-rotate-90');
                 });
             }
+
             if (!window.location.pathname.includes('mapel') &&
                 !window.location.pathname.includes('kelas') &&
                 !window.location.pathname.includes('jadwal') &&
@@ -168,8 +184,14 @@
                 masterIcon.classList.remove('-rotate-90');
             }
 
+            if (!window.location.pathname.includes('laporan-guru') &&
+                !window.location.pathname.includes('laporan-siswa')) {
+                laporanIcon.classList.remove('-rotate-90');
+            }
+
             // Inisialisasi status awal
             updateDropdownVisibility();
+            updateDropdownReports();
 
         });
     </script>

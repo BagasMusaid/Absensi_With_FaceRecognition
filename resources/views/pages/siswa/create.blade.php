@@ -1,8 +1,8 @@
 <div id="tambah-siswa" tabindex="-0" aria-hidden="true"
-    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full backdrop-blur-sm bg-opacity-95 drop-shadow-sm p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-md max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="relative bg-white  rounded-lg shadow dark:bg-gray-700">
             <button type="button"
                 class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-hide="tambah-siswa">
@@ -15,70 +15,97 @@
             </button>
             <div class="px-6 py-6 lg:px-8">
                 <h3 class="mb-4 text-xl  dark:text-white text-center text-indigo-700 font-bold">Tambah Data Siswa</h3>
-                <form class="space-y-6" method="post" action="{{ route('guru.store') }}">
+                <form class="space-y-6" method="post" action="{{ route('siswa.store') }}">
                     @csrf
                     <div>
                         <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
                             Siswa </label>
                         <input type="text" name="nama" id="nama"
                             class="bg-gray-50 border {{ $errors->has('nama') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="Masukan Nama Siswa" value="{{ old('nama') }}" required
-                            value="{{ old('nama') }}">
+                            placeholder="Masukan Nama Siswa" value="{{ old('nama') }}" value="{{ old('nama') }}"
+                            autocomplete="off">
                         @error('nama')
                             <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                         @enderror
                     </div>
-                    <div class="flex flew-row justify-between">
-                        <div>
+                    <div class="flex flew-row justify-between gap-4">
+                        <div class="w-full">
                             <label for="nis"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS</label>
-                            <input type="number" name="nis" id="nis"
-                                class="bg-gray-50 border {{ $errors->has('nip') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="Masukan NIS" required value="{{ old('nis') }}">
+                            <input type="text" inputmode="numeric" name="nis" id="nis"
+                                class="bg-gray-50 border {{ $errors->has('nis') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                placeholder="Masukan NIS" value="{{ old('nis') }}">
                             @error('nis')
                                 <small
                                     class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                             @enderror
                         </div>
-                        <div>
+                        <div class="w-full">
                             <label for="gender" class="block text-gray-700 text-sm font-bold mb-2">
                                 Jenis Kelamin
                             </label>
                             <select id="gender" name="gender"
-                                class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
+                                class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 {{ $errors->has('gender') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
                                 <option value="" disabled {{ old('gender') ? '' : 'selected' }}>Pilih Jenis
                                     Kelamin</option>
-                                <option value="laki-laki" {{ old('gender') == 'laki-laki' ? 'selected' : '' }}>Laki-laki
+                                <option value="laki-laki" {{ old('gender') == 'laki-laki' ? 'selected' : '' }}>
+                                    Laki-laki
                                 </option>
                                 <option value="perempuan" {{ old('gender') == 'perempuan' ? 'selected' : '' }}>
                                     Perempuan</option>
                             </select>
+                            @error('gender')
+                                <small
+                                    class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                            @enderror
                         </div>
                     </div>
-
-                    <div>
-                        <label for="agama"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Agama</label>
-                        <input type="text" name="agama" id="agama"
-                            class="bg-gray-50 border {{ $errors->has('agama') ? 'border-red-600' : 'border-gray-300' }}  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="Masukan Agama" required value="{{ old('agama') }}">
-                        @error('agama')
-                            <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
-                        @enderror
+                    <div class="flex flew-row gap-4 justify-between">
+                        <div class="w-full">
+                            <label for="agama"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Agama</label>
+                            <input type="text" name="agama" id="agama"
+                                class="bg-gray-50 border {{ $errors->has('agama') ? 'border-red-600' : 'border-gray-300' }}  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                placeholder="Masukan Agama" value="{{ old('agama') }}">
+                            @error('agama')
+                                <small
+                                    class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                            @enderror
+                        </div>
+                        <div class="w-full">
+                            <label for="kelas_id" class="block text-gray-700 text-sm font-medium mb-2">
+                                Kelas
+                            </label>
+                            <select id="kelas_id" name="kelas_id"
+                                class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 {{ $errors->has('kelas_id') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
+                                <option value="" disabled {{ old('kelas_id') ? '' : 'selected' }}>Pilih Kelas
+                                    Siswa
+                                </option>
+                                @foreach ($kelas as $ks)
+                                    <option value="{{ $ks->id }}"
+                                        {{ old('kelas_id') == $ks->id ? 'selected' : '' }}>
+                                        Kelas {{ $ks->nama_kelas }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('kelas_id')
+                                <small
+                                    class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                            @enderror
+                        </div>
                     </div>
-
                     <div>
                         <label for="alamat"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat</label>
                         <input type="text" name="alamat" id="alamat"
                             class="bg-gray-50 border {{ $errors->has('alamat') ? 'border-red-600' : 'border-gray-300' }}  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="Masukan Alamat" required value="{{ old('alamat') }}">
+                            placeholder="Masukan Alamat" value="{{ old('alamat') }}">
                         @error('alamat')
                             <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                         @enderror
                     </div>
                     <button type="submit"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">SIMPAN</button>
+                        class="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">SIMPAN</button>
                 </form>
             </div>
 

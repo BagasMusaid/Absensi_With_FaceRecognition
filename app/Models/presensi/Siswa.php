@@ -2,8 +2,10 @@
 
 namespace App\Models\presensi;
 
+use App\Models\master_data\kelas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Siswa extends Model
 {
@@ -14,6 +16,7 @@ class Siswa extends Model
     protected $keyType = 'char';
     protected $fillable = [
         'kd_siswa',
+        'kelas_id',
         'NIS',
         'nama_siswa',
         'jenis_kelamin',
@@ -21,4 +24,8 @@ class Siswa extends Model
         'alamat',
         'wajah'
     ];
+    public function kelas(): BelongsTo
+    {
+        return $this->belongsTo(kelas::class, 'kelas_id', 'id');
+    }
 }

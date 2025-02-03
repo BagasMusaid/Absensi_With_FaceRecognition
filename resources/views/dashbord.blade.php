@@ -2,7 +2,14 @@
 @section('content')
     <div class="p-4 sm:ml-64">
         <div class="p-4 bg-white border border-slate-100 rounded-lg dark:border-gray-700 mt-16">
-            <h1 class="mb-3 text-sm md:text-lg font-bold text-gray-800">Selamat Datang....</h1>
+            <h1 class="mb-5 text-sm md:text-xl font-semibold text-gray-800 capitalize">selamat datang <span class="font-bold">
+                    @if (Auth::guard('wali')->check())
+                        {{ Auth::guard('wali')->user()->guru->nama_guru }}
+                    @elseif(Auth::guard('web')->check())
+                        {{ Auth::guard('web')->user()->name }}
+                    @endif
+                </span>
+            </h1>
             <div class="bg-slate-100 p-3">
                 {{-- presensi --}}
                 <div id="alert-1"
@@ -18,10 +25,11 @@
                             class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
                             Buat Pendaftaran Wajah
                         </a>
-                        <a href="{{ route('PresensiSiswa') }}"
-                            class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
+                        <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
+                            class="py-2 px-5 ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-xs font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
                             Proses Presensi
                         </a>
+
                         <button type="button"
                             class="ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
                             data-dismiss-target="#alert-1" aria-label="Close">
@@ -75,7 +83,7 @@
                         <div class="flex flex-col">
                             <h2 class="text-xs text-center md:text-start md:text-lg font-bold text-gray-700">Total Data
                                 Kelas</h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg">0</h2>
+                            <h2 class="text-center md:text-end font-semibold text-lg">{{ $kelas }}</h2>
                             <p class="text-xs md:text-sm text-gray-300 text-center md:text-end">Kelas Yang Ada</p>
                         </div>
                     </div>
@@ -95,7 +103,7 @@
                         <div class="flex flex-col">
                             <h2 class="text-xs text-center md:text-start md:text-lg font-bold text-gray-700">Jumlah Siswa
                             </h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg">0</h2>
+                            <h2 class="text-center md:text-end font-semibold text-lg">{{ $siswas }}</h2>
                             <p class="text-xs md:text-sm text-gray-300 text-center md:text-end">Total Keseluruhan</p>
                         </div>
                     </div>
@@ -139,4 +147,5 @@
             </div>
         </div>
     </div>
+    @include('pages.presensi.jadwal-presensi')
 @endsection

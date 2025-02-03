@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('walikelas', function (Blueprint $table) {
             $table->id();
             $table->char('guru_id', 20)->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('cascade');
             $table->foreign('guru_id')->references('kd_guru')->on('gurus')->onDelete('cascade');
             $table->timestamps();
         });

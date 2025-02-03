@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kelas');
-            $table->foreignId('walikelas_id')->nullable()->constrained('walikelas')->onDelete('cascade');
+            $table->year('tahun_ajaran');
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }

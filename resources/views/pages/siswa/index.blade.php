@@ -4,9 +4,16 @@
         <div class="p-4 bg-white dark:border-gray-700 mt-20">
             <div
                 class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4  dark:bg-gray-900">
-                <div>
-                    <a href="#" data-modal-target="tambah-siswa" data-modal-toggle="tambah-siswa"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
+                <div
+                    class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
+                    <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
+                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" x2="12" y1="5" y2="19" />
+                        <line x1="5" x2="19" y1="12" y2="12" />
+                    </svg>
+                    <a data-modal-target="tambah-siswa" data-modal-toggle="tambah-siswa"
+                        class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
                         Siswa</a>
                 </div>
                 <form>
@@ -21,7 +28,7 @@
                         </div>
                         <input type="text" id="search" name="search"
                             class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Search Nama Siswa">
+                            placeholder="Search" autocomplete="off">
                     </div>
                 </form>
 
@@ -30,44 +37,55 @@
                 <thead
                     class="text-xs text-gray-700 uppercase  bg-slate-200 border  border-slate-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-3 py-3">
                             No
                         </th>
-                        <th scope="col" class="px-8 py-3">
+                        <th scope="col" class="px-7 py-3 text-center">
                             Nama Siswa
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-3 py-3 text-center">
+                            kelas
+                        </th>
+                        <th scope="col" class="px-5 py-3 text-center">
                             NIS
                         </th>
                         <th scope="col" class="px-6 py-3 text-center">
-                            alamat
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                             Jenis Kelamin
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-3 text-center">
                             Agama
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-3 text-center">
+                            Wajah
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
                             Action
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="siswa-list">
                     @foreach ($datas as $item)
                         <tr
                             class= "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-7 py-4">{{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
+                            <td class="px-4 py-3">{{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
                             </td>
-                            <td class="px-9 py-4 text-sm font-semibold capitalize">{{ $item->nama_siswa }}</td>
-                            <td class="px-3 py-4">{{ $item->NIS }}</td>
-                            <td class="px-8 py-4 text-center">{{ $item->alamat }}</td>
-                            <td class="px-9 py-4">{{ $item->jenis_kelamin }}</td>
-                            <td class="px-6 py-4">{{ $item->agama }}</td>
-                            <td class="px-6 py-4 flex items-center">
+                            <td class="px-7 py-3 text-center text-sm font-semibold capitalize">{{ $item->nama_siswa }}</td>
+                            <td class="px-3 py-3 text-center">{{ $item->kelas->nama_kelas }}</td>
+                            <td class="px-5 py-3 text-center">{{ $item->NIS }}</td>
+                            <td class="px-6 py-3 text-center">{{ $item->jenis_kelamin }}</td>
+                            <td class="px-4 py-3 text-center">{{ $item->agama }}</td>
+                            <td class="px-4 py-3 text-center">
+                                <a href="" {{ $item->wajah === null ? '' : 'disabled' }}
+                                    class="bg-purple-600 text-white py-1 px-2 font-medium rounded-md text-sm">Buat
+                                    Data
+                                    Face</a>
+                                <p class="text-xs mt-0.5 {{ $item->wajah === null ? 'font-normal' : 'text-green-600' }}">
+                                    {{ $item->wajah === null ? 'Belum Tersedia' : 'Tersedia' }}</p>
+                            </td>
+                            <td class="px-6 py-3 flex items-center justify-center">
                                 <!-- Modal toggle -->
                                 <div>
-                                    <a href="#" type="button" data-modal-target="edit-siswa-{{ $item->kd_siswa }}"
+                                    <a type="button" data-modal-target="edit-siswa-{{ $item->kd_siswa }}"
                                         data-modal-show="edit-siswa-{{ $item->kd_siswa }}"
                                         data-tooltip-target="tooltip-edit-{{ $loop->iteration }}">
                                         <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
@@ -90,7 +108,7 @@
                                     </div>
                                     @include('pages.siswa.edit')
                                 </div>
-                                <form action="{{ route('guru.destroy', ['guru' => $item->kd_siswa]) }}" method="POST"
+                                <form action="{{ route('siswa.destroy', ['siswa' => $item->kd_siswa]) }}" method="POST"
                                     class="delete-form">
                                     @csrf
                                     @method('DELETE')
@@ -127,27 +145,17 @@
 @endsection
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    Swal.fire({
-                        title: 'Konfirmasi Hapus Data',
-                        text: 'Apakah Anda yakin ingin menghapus data ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Hapus',
-                        cancelButtonText: 'Batal',
-                        customClass: {
-                            confirmButton: 'bg-red-600 text-white',
-                            cancelButton: 'bg-gray-300 text-gray-700'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
+        $("#search").on("input", function() {
+            let search = $(this).val();
+            $.ajax({
+                url: "{{ route('siswa.index') }}",
+                type: "GET",
+                data: {
+                    search: search
+                },
+                success: function(data) {
+                    $("#siswa-list").html($(data).find("#siswa-list").html());
+                },
             });
         });
     </script>

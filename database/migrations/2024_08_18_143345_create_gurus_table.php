@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('no_telp');
             $table->string('email')->unique();
             $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }

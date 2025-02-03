@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\master_data;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\master_data\StoreWalikelasRequest;
+use App\Models\master_data\kelas;
 use App\Models\master_data\Walikelas;
 use App\Models\presensi\Guru;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class WalikelasController extends Controller
@@ -16,26 +17,30 @@ class WalikelasController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $search = $request->search;
-            $pickGuruId = Walikelas::pluck('guru_id')->toArray(); //ambil guru_id yng di tbl_walikelas
-            $gurus = Guru::whereNotIn('kd_guru', $pickGuruId)->get(); //lakukan pengecualian kd_guru yang sudah dipilih
-            $walikelasQuery = Walikelas::with('guru');
 
-            if ($search) {
-                $walikelasQuery->whereHas('guru', function ($query) use ($search) {
-                    $query->where('nama_guru', 'like', "%$search%")
-                        ->orWhere('NIP', 'like', "%$search%")
-                        ->orwhere('email', 'like', "%$search%");
-                });
-            }
+        $search = $request->search;
+        $pickKelasId = Walikelas::pluck('kelas_id')->toArray();
+        $pickGuruId = Walikelas::pluck('guru_id')->toArray(); //ambil guru_id yng di tbl_walikelas
+        $kelas = kelas::whereNotIn('id', $pickKelasId)->get();
+        $gurus = Guru::whereNotIn('kd_guru', $pickGuruId)->get(); //lakukan pengecualian kd_guru yang sudah dipilih
+        $walikelasQuery = Walikelas::with('guru');
 
-            $walikelas = $walikelasQuery->paginate(10);
-
-            return view('pages.walikelas.index', compact('gurus', 'walikelas', 'search'));
-        } catch (\Exception $e) {
-            return response()->view('errors.500', [], 500);
+        if ($search) {
+            $walikelasQuery->whereHas('guru', function ($query) use ($search) {
+                $query->where('nama_guru', 'like', "%$search%")
+                    ->orWhere('NIP', 'like', "%$search%")
+                    ->orwhere('email', 'like', "%$search%");
+            })->orWhereHas('kelas', function ($query) use ($search) {
+                $query->where('nama_kelas', 'like', "%$search%");
+            });
         }
+
+        $walikelas = $walikelasQuery->paginate(5);
+        if ($request->ajax()) {
+            return view('pages.walikelas.index', compact('walikelas', 'gurus', 'search', 'kelas'))->render();
+        }
+
+        return view('pages.walikelas.index', compact('gurus', 'walikelas', 'search', 'kelas'));
     }
 
     /**
@@ -49,27 +54,10 @@ class WalikelasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreWalikelasRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'guru_id' => 'required|exists:gurus,kd_guru',
-            'password' => 'required|string|min:8',
-        ], [
-            'guru_id.required' => 'Harus Pilih Nama Guru',
-            'password.required' => 'Paswword tidak boleh kosong',
-            'password.min' => 'Paswword minimal 8 karakter',
-        ]);
-        if ($validator->fails()) {
-            alert()->error('Gagal Tambah Data', 'Periksa Kembali Inputan Anda');
-            return redirect()->back()->withInput()->withErrors($validator);
-        }
-
-
         try {
-            Walikelas::create([
-                'guru_id' => $request->guru_id,
-                'password' => $request->password
-            ]);
+            Walikelas::create($request->validated());
             alert()->success('Success', 'Data Berhasil Ditambahkan');
         } catch (\Throwable $th) {
             alert()->error('Gagal', 'Terjadi Kesalahan Saat Menambahkan Data');

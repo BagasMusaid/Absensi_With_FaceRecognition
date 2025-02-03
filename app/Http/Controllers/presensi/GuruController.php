@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\presensi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\presensi\StoreGuruRequest;
+use App\Http\Requests\presensi\UpdateGuruRequest;
 use App\Models\presensi\Guru;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -19,12 +21,13 @@ class GuruController extends Controller
         if ($search) {
             $guruQuery->where(function ($query) use ($search) {
                 $query->where('nama_guru', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%");
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('NIP', 'like', "%$search%");
             });
         };
 
-        $datas = $guruQuery->paginate(5);
-        
+        $datas = $guruQuery->latest()->paginate(5);
+
         if ($request->ajax()) {
             return view('pages.guru.index', compact('datas'))->render();
         }
@@ -43,39 +46,8 @@ class GuruController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreGuruRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama' => 'required|max:225',
-            'nip' => 'required|numeric|digits_between:9,18|unique:gurus',
-            'gender' => 'required',
-            'tlp' => 'required|numeric|digits_between:10,14',
-            'alamat' => 'required|max:225',
-            'email' => 'required|email|unique:gurus',
-            'password' => 'required|min:8|max:225|alpha_dash'
-        ], [
-            'nama.required' => 'Nama Wajib Diisi',
-            'nip.required' => 'NIP Wajib Diisi',
-            'nip.numeric' => 'NIP Harus Angka',
-            'nip.digits_between' => 'NIP min 9 digit dan max 18 digit',
-            'nip.unique' => 'NIP Sudah Ada',
-            'gender.required' => 'Jenis Kelamin Wajib Diisi',
-            'tlp.required' => 'No Telp Wajib Diisi',
-            'tlp.numeric' => 'No Telp Harus Angka',
-            'tlp.digits_between' => 'No Telp min 10 digit dan max 14 digit',
-            'alamat.required' => 'Alamat Wajib Diisi',
-            'email.required' => 'Email Wajib Diisi',
-            'email.email' => 'Email Tidak Valid',
-            'email.unique' => 'Email Sudah Ada',
-            'password.required' => 'Password Wajib Diisi',
-            'password.min' => 'Password Minimal 8 Karakter',
-            'password.alpha_dash' => 'Password Hanya Boleh Menggunakan Huruf Dan Angka'
-        ]);
-
-        if ($validator->fails()) {
-            alert()->error('Gagal Tambah Data', 'Periksa Kembali Inputan Anda');
-            return redirect()->back()->withInput()->withErrors($validator);
-        }
         try {
             // Ambil data guru terakhir berdasarkan kd_guru yang memiliki awalan "GR"
             $latestGuru = Guru::where('kd_guru', 'LIKE', 'GR%')->orderBy('kd_guru', 'desc')->first();
@@ -126,37 +98,8 @@ class GuruController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $kd_guru)
+    public function update(UpdateGuruRequest $request, string $kd_guru)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_guru' => 'required|max:225',
-            'nip_guru' => 'required|numeric|digits_between:9,18|unique:gurus,NIP,' . $kd_guru . ',kd_guru',
-            'gender_guru' => 'required',
-            'tlp_guru' => 'required|numeric|digits_between:10,14',
-            'alamat_guru' => 'required|max:225',
-            'email_guru' => 'required|email|unique:gurus,email,' . $kd_guru . ',kd_guru',
-        ], [
-            'nama_guru.required' => 'Nama Wajib Diisi',
-            'nip_guru.required' => 'NIP Wajib Diisi',
-            'nip_guru.unique' => 'NIP Sudah Ada',
-            'nip_guru.numeric' => 'NIP Harus Berupa Angka',
-            'nip_guru.digits_between' => 'NIP Min 9 Digit dan Max 18 Digit',
-            'gender_guru.required' => 'Jenis Kelamin Wajib Diisi',
-            'tlp_guru.required' => 'No Telp Wajib Diisi',
-            'tlp_guru.numeric' => 'No Telp Harus Berupa Angka',
-            'tlp_guru.digits_between' => 'No Telp Min 10 Digit dan Max 14 Digit',
-            'tlp_guru.max' => 'No Telp Tidak Boleh Lebih Dari 15',
-            'alamat_guru.required' => 'Alamat Wajib Diisi',
-            'email_guru.required' => 'Email Wajib Diisi',
-            'email_guru.email' => 'Email Tidak Valid',
-            'email_guru.unique' => 'Email Sudah Ada',
-        ]);
-
-        if ($validator->fails()) {
-            alert()->error('Gagal Update Data', 'Periksa Kembali Inputan Anda');
-            return redirect()->back()->withInput()->withErrors($validator);
-        }
-
         try {
             Guru::where('kd_guru', $kd_guru)->update([
                 'nama_guru' => $request->nama_guru,
@@ -168,7 +111,7 @@ class GuruController extends Controller
             ]);
             alert()->success('Success', 'Data Berhasil Diupdate');
         } catch (\Exception $e) {
-            alert()->error('Gagal', 'Terjadi Kesalahan Saat Menambahkan Data');
+            alert()->error('Gagal', 'Terjadi Kesalahan Saat Mengupdate Data');
             return redirect()->back()->withInput();
         }
 

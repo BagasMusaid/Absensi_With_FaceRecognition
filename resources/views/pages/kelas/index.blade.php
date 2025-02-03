@@ -4,9 +4,16 @@
         <div class="p-4 bg-white dark:border-gray-700 mt-20">
             <div
                 class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4  dark:bg-gray-900">
-                <div>
+                <div
+                    class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
+                    <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
+                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" x2="12" y1="5" y2="19" />
+                        <line x1="5" x2="19" y1="12" y2="12" />
+                    </svg>
                     <a data-modal-target="tambah-kelas" data-modal-toggle="tambah-kelas"
-                        class="text-white bg-blue-700 cursor-pointer hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
+                        class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
                         Kelas</a>
                 </div>
                 <form>
@@ -30,30 +37,38 @@
                 <thead
                     class="text-xs text-gray-700 uppercase  bg-slate-200 border  border-slate-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-3 py-3">
                             No
                         </th>
-                        <th scope="col" class="px-8 py-3">
+                        <th scope="col" class="px-8 py-3 text-center">
                             Nama Kelas
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                            Nama Walikelas
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Tahun Ajaran
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Catatan
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
                             Action
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="kelas-list">
                     @foreach ($kelas as $ks)
                         <tr
                             class= "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-7 py-4">{{ $loop->iteration + ($kelas->currentPage() - 1) * $kelas->perPage() }}
+                            <td class="px-4 py-3">{{ $loop->iteration + ($kelas->currentPage() - 1) * $kelas->perPage() }}
                             </td>
-                            <td class="px-10 py-3 text-sm font-semibold capitalize"><span>Kelas </span>{{ $ks->nama_kelas }}
+                            <td class="px-8 py-3 text-sm font-semibold capitalize text-center"><span>Kelas
+                                </span>{{ $ks->nama_kelas }}
                             </td>
-                            <td class="px-8 py-3 ">{{ $ks->walikelas->guru->nama_guru }}</td>
-                            <td class="px-6 py-4 flex items-center">
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">{{ $ks->tahun_ajaran }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $ks->catatan ? $ks->catatan : 'Tidak Ada' }}
+                            </td>
+                            <td class="px-6 py-3 flex items-center justify-center">
                                 <!-- Modal toggle -->
                                 <div>
                                     <a type="button" data-modal-target="edit-kelas-{{ $ks->id }}"
@@ -117,27 +132,20 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    Swal.fire({
-                        title: 'Konfirmasi Hapus Data',
-                        text: 'Apakah anda yakin ingin menghapus data ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Hapus',
-                        cancelButtonText: 'Batal',
-                        customClass: {
-                            confirmButton: 'bg-red-600 text-white',
-                            cancelButton: 'bg-gray-300 text-gray-700'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
+            $('#search').on('input', function() {
+                let search = $(this).val();
+                $.ajax({
+                    url: "{{ route('kelas.index') }}",
+                    method: "GET",
+                    data: {
+                        search: search
+                    },
+                    success: function(data) {
+                        $('#kelas-list').html($(data).find('#kelas-list').html());
+                    }
+                })
             });
+
         });
     </script>
 @endpush

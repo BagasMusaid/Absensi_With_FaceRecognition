@@ -4,9 +4,16 @@
         <div class="p-4 bg-white dark:border-gray-700 mt-20">
             <div
                 class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4  dark:bg-gray-900">
-                <div>
+                <div
+                    class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
+                    <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
+                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" x2="12" y1="5" y2="19" />
+                        <line x1="5" x2="19" y1="12" y2="12" />
+                    </svg>
                     <a data-modal-target="tambah-modal" data-modal-toggle="tambah-modal"
-                        class="text-white cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
+                        class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
                         Guru</a>
                 </div>
                 <form>
@@ -21,7 +28,7 @@
                         </div>
                         <input type="text" id="search" name="search"
                             class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Search">
+                            placeholder="Search" autocomplete="off">
                     </div>
                 </form>
 
@@ -131,41 +138,18 @@
 @endsection
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    Swal.fire({
-                        title: 'Konfirmasi Hapus Data',
-                        text: 'Apakah anda yakin ingin menghapus data ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Hapus',
-                        cancelButtonText: 'Batal',
-                        customClass: {
-                            confirmButton: 'bg-red-600 text-white',
-                            cancelButton: 'bg-gray-300 text-gray-700'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
-            $('#search').on('input', function() {
-                let search = $(this).val();
-                $.ajax({
-                    url: "{{ route('guru.index') }}",
-                    type: "GET",
-                    data: {
-                        search: search
-                    },
-                    success: function(data) {
-                        // Only refresh the #guru-list content
-                        $('#guru-list').html($(data).find('#guru-list').html());
-                    }
-                });
+        $("#search").on("input", function() {
+            let search = $(this).val();
+            $.ajax({
+                url: "{{ route('guru.index') }}",
+                type: "GET",
+                data: {
+                    search: search,
+                },
+                success: function(data) {
+                    // Only refresh the #guru-list content
+                    $("#guru-list").html($(data).find("#guru-list").html());
+                },
             });
         });
     </script>

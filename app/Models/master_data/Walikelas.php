@@ -6,15 +6,17 @@ use App\Models\presensi\Guru;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Walikelas extends Model
+class Walikelas extends Authenticatable
 {
     use HasFactory;
     protected $table = 'walikelas';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'guru_id',
+        'kelas_id',
         'password'
     ];
 
@@ -33,8 +35,8 @@ class Walikelas extends Model
     {
         return $this->belongsTo(Guru::class, 'guru_id', 'kd_guru');
     }
-    public function kelas(): HasOne
+    public function kelas(): BelongsTo
     {
-        return $this->hasOne(kelas::class, 'walikelas', 'id');
+        return $this->belongsTo(kelas::class, 'kelas_id', 'id');
     }
 }
