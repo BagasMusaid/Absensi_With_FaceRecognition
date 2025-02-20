@@ -17,18 +17,19 @@
                 <div class="flex items-start justify-center mx-auto ">
                     <div class="mx-auto">
                         <div class="input_field flex flex-col  mx-auto text-center mt-2">
-                            <form action="" enctype="multipart/form-data" method="post">
+                            <form action="{{ route('akun.updateProfil') }}" enctype="multipart/form-data"
+                                method="post">
                                 @csrf
-                                @method('PUT')
+                                @method('PATCH')
                                 <div class=" w-80 p-2 ">
                                     <div class="space-y-2">
                                         <div class="relative">
-                                            <input type="file" name="gambarKopi" id="gambarKopi"
+                                            <input type="file" name="foto_profil" id="foto_profil"
                                                 class="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10 overflow-hidden"
-                                                onchange="updateKopiName()">
+                                                onchange="updateNameProfil()">
                                             <div
-                                                class="border-2 border-dashed border-indigo-700 md:w-30 py-3  rounded-md cursor-pointer hover:bg-gray-100 transition duration-300">
-                                                <svg class="feather feather-upload text-indigo-700 mx-auto h-6 w-6 font-bold hidden md:block"
+                                                class="border-2 border-dashed {{ $errors->has('foto_profil') ? 'border-red-600' : 'border-indigo-700 ' }} md:w-30 py-3  rounded-md cursor-pointer hover:bg-gray-100 transition duration-300">
+                                                <svg class="feather feather-upload text-indigo-700 mx-auto h-6 w-6 font-bold"
                                                     fill="none" stroke="currentColor" stroke-linecap="round"
                                                     stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
                                                     width="24" xmlns="http://www.w3.org/2000/svg">
@@ -43,6 +44,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @error('foto_profil')
+                                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
                                         <button type="submit"
                                             class="w-full mt-6 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">
                                             Upload

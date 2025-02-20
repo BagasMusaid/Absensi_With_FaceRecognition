@@ -2,10 +2,12 @@
 
 namespace App\Models\presensi;
 
+use App\Models\master_data\GuruPiket;
 use App\Models\master_data\Walikelas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,6 +29,7 @@ class Guru extends Authenticatable
         'alamat',
         'no_telp',
         'email',
+        'foto_profil',
         'password'
     ];
 
@@ -44,5 +47,9 @@ class Guru extends Authenticatable
     public function walikelas(): HasMany
     {
         return $this->hasMany(Walikelas::class, 'guru_id', 'kd_guru');
+    }
+    public function piket(): HasOne
+    {
+        return $this->hasOne(GuruPiket::class, 'guru_id', 'kd_guru');
     }
 }

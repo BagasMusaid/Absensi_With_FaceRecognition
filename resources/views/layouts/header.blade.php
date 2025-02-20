@@ -14,22 +14,37 @@
                     </svg>
                 </button>
                 <a class="flex ms-2 md:me-24">
-                    <img src="{{ asset('asset/images/sekolah.png') }}" class="h-12  me-3 md:h-10 md:mt-1"
+                    <img src="{{ asset('asset/images/sekolah.png') }}" class="h-8 me-3 md:h-10 md:mt-1"
                         alt="logo sekolah" />
                     <span
-                        class="self-center text-sm font-bold sm:text-base uppercase whitespace-nowrap dark:text-white">Presensi
+                        class="self-center text-xs font-bold sm:text-base uppercase whitespace-nowrap dark:text-white">Presensi
                         SD Negeri <br> 1 Ngemplak</span>
                 </a>
             </div>
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
-                    <div>
+                    <div class="flex gap-2">
+                        <span class="mt-1.5 font-semibold hidden md:block text-sm">
+                            @if (Auth::guard('wali')->check())
+                                walikelas
+                            @elseif(Auth::guard('web')->check())
+                                admin
+                            @else
+                                User
+                            @endif
+                        </span>
                         <button type="button"
                             class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                             aria-expanded="false" data-dropdown-toggle="dropdown-user">
                             <span class="sr-only">Open user menu</span>
                             <img class="w-8 h-8 rounded-full"
-                                src="{{ Auth::user()->poto ? url(Storage::url(Auth::user()->poto)) : asset('asset/images/profie.jpg') }}"
+                                src="
+    @if (Auth::guard('wali')->check() && Auth::guard('wali')->user()->guru->foto_profil) {{ url(Storage::url('public/profil_wali/' . Auth::guard('wali')->user()->guru->foto_profil)) }}
+    @elseif(Auth::guard('web')->check() && Auth::guard('web')->user()->foto_profil)
+        {{ url(Storage::url('public/profil_admin/' . Auth::guard('web')->user()->foto_profil)) }}
+    @else
+        {{ asset('asset/images/profie.jpg') }} @endif
+    "
                                 alt="photo profile">
                         </button>
                     </div>
@@ -62,7 +77,7 @@
                                     class="block px-4 {{ active_class(['akun']) }} py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Account</a>
                             </li>
-                            <li>
+                            <li class="cursor-pointer">
                                 <form id="logout-form" action="{{ url('logout') }}" method="GET"
                                     style="display: none;">
                                     @csrf

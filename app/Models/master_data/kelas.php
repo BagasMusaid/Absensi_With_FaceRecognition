@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class kelas extends Model
+class Kelas extends Model
 {
     use HasFactory;
     protected $table = 'kelas';
     protected $fillable = [
         'nama_kelas',
-        'tahun_ajaran',
+        'kd_tahun_ajaran',
         'catatan'
     ];
 
@@ -30,5 +30,9 @@ class kelas extends Model
     public function mapel(): HasMany
     {
         return $this->hasMany(mapel::class, 'kd_kelas', 'id');
+    }
+    public function tahun_ajaran(): BelongsTo
+    {
+        return $this->belongsTo(TahunAjaran::class, 'kd_tahun_ajaran', 'id');
     }
 }

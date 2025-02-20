@@ -37,28 +37,28 @@
                 <thead
                     class="text-xs text-gray-700 uppercase  bg-slate-200 border  border-slate-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-3 text-center">
                             No
                         </th>
-                        <th scope="col" class="px-8 py-3">
+                        <th scope="col" class="px-8 py-3 text-center">
                             Nama Guru
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-5 py-3 text-center">
                             Nip
                         </th>
-                        <th scope="col" class="px-6 py-3 text-center">
+                        <th scope="col" class="px-2 py-3 text-center">
                             alamat
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-5 py-3 text-center">
                             Jenis Kelamin
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-5 py-3 text-center">
                             No Telepone
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-5 py-3 text-center">
                             Email
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-5 py-3 text-center">
                             Action
                         </th>
                     </tr>
@@ -67,15 +67,16 @@
                     @foreach ($datas as $item)
                         <tr
                             class= "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-7 py-4">{{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
+                            <td class="px-4 py-3 text-center">
+                                {{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
                             </td>
-                            <td class="px-9 py-4 text-sm font-semibold capitalize">{{ $item->nama_guru }}</td>
-                            <td class="px-3 py-4">{{ $item->NIP }}</td>
-                            <td class="px-8 py-4 text-center">{{ $item->alamat }}</td>
-                            <td class="px-9 py-4">{{ $item->jenis_kelamin }}</td>
-                            <td class="px-6 py-4">{{ $item->no_telp }}</td>
-                            <td class="px-1 py-4">{{ $item->email }}</td>
-                            <td class="px-6 py-4 flex items-center">
+                            <td class="px-8 py-3 text-center text-sm font-semibold capitalize">{{ $item->nama_guru }}</td>
+                            <td class="px-5 py-3 text-center">{{ $item->NIP }}</td>
+                            <td class="px-2 py-3 text-center">{{ $item->alamat }}</td>
+                            <td class="px-5 py-3 text-center">{{ $item->jenis_kelamin }}</td>
+                            <td class="px-5 py-3 text-center">{{ $item->no_telp }}</td>
+                            <td class="px-5 py-3 text-center">{{ $item->email }}</td>
+                            <td class="px-5 py-3 text-center flex items-center">
                                 <!-- Modal toggle -->
                                 <div>
                                     <a type="button" data-modal-target="edit-guru-{{ $item->kd_guru }}"
@@ -138,19 +139,28 @@
 @endsection
 @push('scripts')
     <script>
+        let delayTimer;
         $("#search").on("input", function() {
-            let search = $(this).val();
-            $.ajax({
-                url: "{{ route('guru.index') }}",
-                type: "GET",
-                data: {
-                    search: search,
-                },
-                success: function(data) {
-                    // Only refresh the #guru-list content
-                    $("#guru-list").html($(data).find("#guru-list").html());
-                },
-            });
+            clearTimeout(delayTimer);
+            let search = $(this).val().trim();
+            delayTimer = setTimeout(() => {
+                $.ajax({
+                    url: "{{ route('guru.index') }}",
+                    type: "GET",
+                    data: {
+                        search: search
+                    },
+                    beforeSend: function() {
+                        $("#loading").show();
+                    },
+                    success: function(data) {
+                        $("#guru-list").html($(data).find("#guru-list").html());
+                    },
+                    complete: function() {
+                        $("#loading").hide();
+                    }
+                });
+            }, 300);
         });
     </script>
 @endpush

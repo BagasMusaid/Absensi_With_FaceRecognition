@@ -12,9 +12,9 @@
                         <line x1="12" x2="12" y1="5" y2="19" />
                         <line x1="5" x2="19" y1="12" y2="12" />
                     </svg>
-                    <a data-modal-target="tambah-siswa" data-modal-toggle="tambah-siswa"
+                    <a data-modal-target="tambah-tahun-ajaran" data-modal-toggle="tambah-tahun-ajaran"
                         class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
-                        Siswa</a>
+                        Tahun Ajaran</a>
                 </div>
                 <form>
                     <label for="search" class="sr-only">Search</label>
@@ -40,53 +40,40 @@
                         <th scope="col" class="px-3 py-3">
                             No
                         </th>
-                        <th scope="col" class="px-7 py-3 text-center">
-                            Nama Siswa
-                        </th>
-                        <th scope="col" class="px-3 py-3 text-center">
-                            kelas
-                        </th>
-                        <th scope="col" class="px-5 py-3 text-center">
-                            NIS
+                        <th scope="col" class="px-8 py-3 text-center">
+                            Tahun Mulai
                         </th>
                         <th scope="col" class="px-6 py-3 text-center">
-                            Jenis Kelamin
+                            Tahun Selesai
                         </th>
-                        <th scope="col" class="px-4 py-3 text-center">
-                            Agama
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-center">
-                            Wajah
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Semester
                         </th>
                         <th scope="col" class="px-6 py-3 text-center">
                             Action
                         </th>
                     </tr>
                 </thead>
-                <tbody id="siswa-list">
-                    @foreach ($datas as $item)
+                <tbody id="tahun-ajaran-list">
+                    @foreach ($tahunAjaran as $ta)
                         <tr
                             class= "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-4 py-3">{{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
+                            <td class="px-4 py-3">
+                                {{ $loop->iteration + ($tahunAjaran->currentPage() - 1) * $tahunAjaran->perPage() }}
                             </td>
-                            <td class="px-7 py-3 text-center text-sm font-semibold capitalize">{{ $item->nama_siswa }}</td>
-                            <td class="px-3 py-3 text-center">{{ $item->kelas->nama_kelas }}</td>
-                            <td class="px-5 py-3 text-center">{{ $item->NIS }}</td>
-                            <td class="px-6 py-3 text-center">{{ $item->jenis_kelamin }}</td>
-                            <td class="px-4 py-3 text-center">{{ $item->agama }}</td>
-                            <td class="px-4 py-3 text-center">
-                                <a href="" {{ $item->wajah === null ? '' : 'disabled' }}
-                                    class="bg-purple-600 text-white py-1 px-2 font-medium rounded-md text-sm">Buat
-                                    Data
-                                    Face</a>
-                                <p class="text-xs mt-0.5 {{ $item->wajah === null ? 'font-normal' : 'text-green-600' }}">
-                                    {{ $item->wajah === null ? 'Belum Tersedia' : 'Tersedia' }}</p>
+                            <td class="px-8 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $ta->tahun_mulai }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">{{ $ta->tahun_selesai }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $ta->semester }}
                             </td>
                             <td class="px-6 py-3 flex items-center justify-center">
                                 <!-- Modal toggle -->
                                 <div>
-                                    <a type="button" data-modal-target="edit-siswa-{{ $item->kd_siswa }}"
-                                        data-modal-show="edit-siswa-{{ $item->kd_siswa }}"
+                                    <a type="button" data-modal-target="edit-tahun-ajaran-{{ $ta->id }}"
+                                        data-modal-show="edit-tahun-ajaran-{{ $ta->id }}"
                                         data-tooltip-target="tooltip-edit-{{ $loop->iteration }}">
                                         <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -106,9 +93,9 @@
                                         Edit
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
-                                    @include('pages.siswa.edit')
+                                    @include('pages.tahun-ajaran.edit')
                                 </div>
-                                <form action="{{ route('siswa.destroy', ['siswa' => $item->kd_siswa]) }}" method="POST"
+                                <form action="{{ route('kelas.destroy', ['kela' => $ta->id]) }}" method="POST"
                                     class="delete-form">
                                     @csrf
                                     @method('DELETE')
@@ -138,10 +125,10 @@
             </table>
         </div>
         <div class="mt-3">
-            {{ $datas->links() }}
+            {{ $tahunAjaran->links() }}
         </div>
     </div>
-    @include('pages.siswa.create')
+    @include('pages.tahun-ajaran.create')
 @endsection
 @push('scripts')
     <script>
@@ -151,7 +138,7 @@
             let search = $(this).val().trim();
             delayTimer = setTimeout(() => {
                 $.ajax({
-                    url: "{{ route('siswa.index') }}",
+                    url: "{{ route('tahun-ajaran.index') }}",
                     type: "GET",
                     data: {
                         search: search
@@ -160,7 +147,7 @@
                         $("#loading").show();
                     },
                     success: function(data) {
-                        $("#siswa-list").html($(data).find("#siswa-list").html());
+                        $("#tahun-ajaran-list").html($(data).find("#tahun-ajaran-list").html());
                     },
                     complete: function() {
                         $("#loading").hide();

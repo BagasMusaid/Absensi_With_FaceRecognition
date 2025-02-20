@@ -1,37 +1,61 @@
 @extends('layouts.master')
 @section('content')
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 bg-white border border-slate-100 rounded-lg dark:border-gray-700 mt-16">
-            <h1 class="mb-5 text-sm md:text-xl font-semibold text-gray-800 capitalize">selamat datang <span class="font-bold">
+    <div class="mx-4 md:pl-4 sm:ml-64 mb-3">
+        <div
+            class="p-4 bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 focus:ring-4 focus:outline-none focus:ring-purple-300  border border-slate-100 rounded-lg dark:border-gray-700 mt-20">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-white font-bold text-2xs md:text-2xl mb-1">{{ $greeting }}, <span>
+                            @if (Auth::guard('wali')->check())
+                                Walikelas
+                            @elseif(Auth::guard('web')->check())
+                                Admin
+                            @else
+                                User
+                            @endif
+                        </span></h1>
+                    <p class="text-white font-medium text-xs md:text-base">Bagaimana kabarmu hari ini ?</p>
+                </div>
+                <img src="{{ asset('asset/images/tut.png') }}
+                " class="h-10 me-3 md:h-14 md:mt-1"
+                    alt="">
+            </div>
+        </div>
+    </div>
+    <div class="mx-4 md:pl-4 sm:ml-64">
+        <div class="p-4 bg-white border border-slate-100 rounded-lg dark:border-gray-700">
+            {{-- <h1 class="mb-5 text-sm md:text-xl font-semibold text-gray-800 capitalize">{{ $greeting }} <span
+                    class="font-bold">
                     @if (Auth::guard('wali')->check())
                         {{ Auth::guard('wali')->user()->guru->nama_guru }}
                     @elseif(Auth::guard('web')->check())
                         {{ Auth::guard('web')->user()->name }}
                     @endif
                 </span>
-            </h1>
+            </h1> --}}
             <div class="bg-slate-100 p-3">
                 {{-- presensi --}}
                 <div id="alert-1"
                     class="flex justify-end items-end p-1 mb-4 text-blue-800 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-blue-400"
                     role="alert">
-                    <h2 class="uppercase hidden md:block text-xs md:text-base text-gray-600 mb-2 pb-2 ml-6 font-semibold ">
+                    <h2
+                        class="uppercase text-[6.5px] md:text-base text-gray-600 md:mb-1 mb-2 pb-2 ml-3 md:ml-6 font-semibold ">
                         Klik Proses
                         Presensi
                         untuk melakukan
                         presensi</h2>
                     <div class="ml-auto flex items-center">
-                        <a href="{{ route('DaftarPresensi') }}"
+                        {{-- <a href="{{ route('DaftarPresensi') }}"
                             class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
                             Buat Pendaftaran Wajah
-                        </a>
+                        </a> --}}
                         <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
-                            class="py-2 px-5 ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-xs font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
+                            class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
                             Proses Presensi
                         </a>
 
                         <button type="button"
-                            class="ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
+                            class="ml-1 md:ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
                             data-dismiss-target="#alert-1" aria-label="Close">
                             <span class="sr-only">Close</span>
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -56,11 +80,12 @@
                             </svg>
                         </div>
                         <div class="flex flex-col">
-                            <h2 class="text-xs text-center md:text-start md:text-lg font-bold text-gray-700">
+                            <h2 class="text-[10px] px-1 text-center md:text-start md:text-lg font-bold text-gray-700">
                                 Presensi Hari
                                 Ini</h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg">0</h2>
-                            <p class="text-xs md:text-sm text-gray-300 text-center md:text-end">Dari Total 0 Siswa</p>
+                            <h2 class="text-center md:text-end font-semibold text-lg text-red-500">0</h2>
+                            <p class="text-[8px] px-1 md:text-sm text-gray-300 text-center md:text-end">Dari Total 0 Siswa
+                            </p>
                         </div>
                     </div>
                     <div
@@ -81,10 +106,15 @@
                             </svg>
                         </div>
                         <div class="flex flex-col">
-                            <h2 class="text-xs text-center md:text-start md:text-lg font-bold text-gray-700">Total Data
+                            <h2 class="text-[10px] px-1 text-center md:text-start md:text-lg font-bold text-gray-700">Total
+                                Data
                                 Kelas</h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg">{{ $kelas }}</h2>
-                            <p class="text-xs md:text-sm text-gray-300 text-center md:text-end">Kelas Yang Ada</p>
+                            <h2 class="text-center md:text-end font-semibold text-lg text-yellow-300">{{ $kelas }}
+                            </h2>
+                            <p class="text-[8px] px-1 md:text-sm text-gray-300 text-center md:text-end">Kelas Yang <br
+                                    class="md:hidden block">
+                                Ada
+                            </p>
                         </div>
                     </div>
                     <div
@@ -101,10 +131,13 @@
                             </svg>
                         </div>
                         <div class="flex flex-col">
-                            <h2 class="text-xs text-center md:text-start md:text-lg font-bold text-gray-700">Jumlah Siswa
+                            <h2 class="text-[10px] px-1 text-center md:text-start md:text-lg font-bold text-gray-700">Jumlah
+                                Siswa
                             </h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg">{{ $siswas }}</h2>
-                            <p class="text-xs md:text-sm text-gray-300 text-center md:text-end">Total Keseluruhan</p>
+                            <h2 class="text-center md:text-end font-semibold text-lg text-emerald-300">{{ $siswas }}
+                            </h2>
+                            <p class="text-[8px] px-1 md:text-sm text-gray-300 text-center md:text-end">Total Keseluruhan
+                            </p>
                         </div>
                     </div>
                     <div
@@ -120,19 +153,22 @@
                             </svg>
                         </div>
                         <div class="flex flex-col">
-                            <h2 class="text-xs text-center md:text-start md:text-lg font-bold text-gray-700">Jumlah Guru
+                            <h2 class="text-[10px] px-1 text-center md:text-start md:text-lg font-bold text-gray-700">Jumlah
+                                Guru
                             </h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg">{{ $gurus }}</h2>
-                            <p class="text-xs md:text-sm text-gray-300 text-center md:text-end">Keseluruhan Guru</p>
+                            <h2 class="text-center md:text-end font-semibold text-lg text-purple-400">{{ $gurus }}
+                            </h2>
+                            <p class="text-[8px] px-1 md:text-sm text-gray-300 text-center md:text-end">Keseluruhan Guru</p>
                         </div>
                     </div>
                 </div>
                 {{-- endinformasi --}}
-                <div class="block md:flex md:space-x-2 px-2 lg:p-0 mt-10 mb-10">
+                <div class="block md:flex md:space-x-2  lg:p-0 mt-7 md:mt-10 mb-10">
                     <img src="{{ asset('/asset/images/bocil.png') }}" alt="" class="lg:w-2/3 w-full">
                     <div class="w-full lg:w-1/3 px-3 bg-white shadow-sm mt-3 md:mt-0">
                         <div class="flex flex-col">
-                            <h2 class="p-4 text-blue-600 font-bold">Detail Informasi Data Pelajaran</h2>
+                            <h2 class="p-4 text-blue-600 text-sm md:text-base font-bold">Detail Informasi Data Pelajaran
+                            </h2>
                             <div class="p-4 mt-5 md:mt-10">
                                 <h2 class="font-semibold">Jumlah Mata Pelajaran</h2>
                                 <h3 class="font-bold text-lg">0</h3>

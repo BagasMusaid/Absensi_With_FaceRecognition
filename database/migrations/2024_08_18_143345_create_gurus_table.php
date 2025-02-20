@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('no_telp');
             $table->string('email')->unique();
+            $table->string('foto_profil')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

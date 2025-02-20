@@ -37,6 +37,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             return redirect()->route('dashbord');
         }
+
         $guru = Guru::where('email', $request->email)->first();
         if ($guru) {
             // Setelah menemukan guru, ambil data walikelas berdasarkan guru_id
@@ -59,11 +60,11 @@ class LoginController extends Controller
         } elseif (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
-
+        session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        $request->session()->regenerate();
+        // $request->session()->regenerate();
 
-        return redirect('login');
+        return redirect()->route('login');
     }
 }

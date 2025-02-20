@@ -12,9 +12,10 @@
                         <line x1="12" x2="12" y1="5" y2="19" />
                         <line x1="5" x2="19" y1="12" y2="12" />
                     </svg>
-                    <a data-modal-target="tambah-siswa" data-modal-toggle="tambah-siswa"
+                    <a data-modal-target="tambah-modal" data-modal-toggle="tambah-modal"
                         class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
-                        Siswa</a>
+                        Jadwal
+                        Guru Piket</a>
                 </div>
                 <form>
                     <label for="search" class="sr-only">Search</label>
@@ -37,56 +38,44 @@
                 <thead
                     class="text-xs text-gray-700 uppercase  bg-slate-200 border  border-slate-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-3 py-3">
+                        <th scope="col" class="px-4 py-3 text-center">
                             No
                         </th>
-                        <th scope="col" class="px-7 py-3 text-center">
-                            Nama Siswa
-                        </th>
-                        <th scope="col" class="px-3 py-3 text-center">
-                            kelas
+                        <th scope="col" class="px-8 py-3 text-center">
+                            Nama Guru
                         </th>
                         <th scope="col" class="px-5 py-3 text-center">
-                            NIS
+                            Hari Piket
                         </th>
-                        <th scope="col" class="px-6 py-3 text-center">
-                            Jenis Kelamin
+                        <th scope="col" class="px-2 py-3 text-center">
+                            Semester
                         </th>
-                        <th scope="col" class="px-4 py-3 text-center">
-                            Agama
+                        <th scope="col" class="px-5 py-3 text-center">
+                            Tahun Ajaran
                         </th>
-                        <th scope="col" class="px-4 py-3 text-center">
-                            Wajah
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-center">
+                        <th scope="col" class="px-5 py-3 text-center">
                             Action
                         </th>
                     </tr>
                 </thead>
-                <tbody id="siswa-list">
-                    @foreach ($datas as $item)
+                <tbody id="guru-piket-list">
+                    @foreach ($guruPiket as $GP)
                         <tr
                             class= "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-4 py-3">{{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
-                            </td>
-                            <td class="px-7 py-3 text-center text-sm font-semibold capitalize">{{ $item->nama_siswa }}</td>
-                            <td class="px-3 py-3 text-center">{{ $item->kelas->nama_kelas }}</td>
-                            <td class="px-5 py-3 text-center">{{ $item->NIS }}</td>
-                            <td class="px-6 py-3 text-center">{{ $item->jenis_kelamin }}</td>
-                            <td class="px-4 py-3 text-center">{{ $item->agama }}</td>
                             <td class="px-4 py-3 text-center">
-                                <a href="" {{ $item->wajah === null ? '' : 'disabled' }}
-                                    class="bg-purple-600 text-white py-1 px-2 font-medium rounded-md text-sm">Buat
-                                    Data
-                                    Face</a>
-                                <p class="text-xs mt-0.5 {{ $item->wajah === null ? 'font-normal' : 'text-green-600' }}">
-                                    {{ $item->wajah === null ? 'Belum Tersedia' : 'Tersedia' }}</p>
+                                {{ $loop->iteration + ($guruPiket->currentPage() - 1) * $guruPiket->perPage() }}
                             </td>
-                            <td class="px-6 py-3 flex items-center justify-center">
+                            <td class="px-8 py-3 text-center text-sm font-semibold capitalize">{{ $GP->guru->nama_guru }}
+                            </td>
+                            <td class="px-5 py-3 text-center">{{ $GP->hari }}</td>
+                            <td class="px-2 py-3 text-center">{{ $GP->tahun_ajaran->semester }}</td>
+                            <td class="px-5 py-3 text-center">
+                                {{ $GP->tahun_ajaran->tahun_mulai }}/{{ $GP->tahun_ajaran->tahun_selesai }}</td>
+                            <td class="px-5 py-3 text-center flex items-center justify-center">
                                 <!-- Modal toggle -->
                                 <div>
-                                    <a type="button" data-modal-target="edit-siswa-{{ $item->kd_siswa }}"
-                                        data-modal-show="edit-siswa-{{ $item->kd_siswa }}"
+                                    <a type="button" data-modal-target="edit-guru-piket-{{ $GP->id }}"
+                                        data-modal-show="edit-guru-piket-{{ $GP->id }}"
                                         data-tooltip-target="tooltip-edit-{{ $loop->iteration }}">
                                         <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -106,9 +95,9 @@
                                         Edit
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
-                                    @include('pages.siswa.edit')
+                                    @include('pages.guru-piket.edit')
                                 </div>
-                                <form action="{{ route('siswa.destroy', ['siswa' => $item->kd_siswa]) }}" method="POST"
+                                <form action="{{ route('guru-piket.destroy', $GP->id) }}" method="POST"
                                     class="delete-form">
                                     @csrf
                                     @method('DELETE')
@@ -138,35 +127,8 @@
             </table>
         </div>
         <div class="mt-3">
-            {{ $datas->links() }}
+            {{ $guruPiket->links() }}
         </div>
     </div>
-    @include('pages.siswa.create')
+    @include('pages.guru-piket.create')
 @endsection
-@push('scripts')
-    <script>
-        let delayTimer;
-        $("#search").on("input", function() {
-            clearTimeout(delayTimer);
-            let search = $(this).val().trim();
-            delayTimer = setTimeout(() => {
-                $.ajax({
-                    url: "{{ route('siswa.index') }}",
-                    type: "GET",
-                    data: {
-                        search: search
-                    },
-                    beforeSend: function() {
-                        $("#loading").show();
-                    },
-                    success: function(data) {
-                        $("#siswa-list").html($(data).find("#siswa-list").html());
-                    },
-                    complete: function() {
-                        $("#loading").hide();
-                    }
-                });
-            }, 300);
-        });
-    </script>
-@endpush

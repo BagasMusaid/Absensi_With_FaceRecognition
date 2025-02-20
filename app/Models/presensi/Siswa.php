@@ -2,7 +2,7 @@
 
 namespace App\Models\presensi;
 
-use App\Models\master_data\kelas;
+use App\Models\master_data\Kelas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +26,6 @@ class Siswa extends Model
     ];
     public function kelas(): BelongsTo
     {
-        return $this->belongsTo(kelas::class, 'kelas_id', 'id');
+        return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
     }
 }

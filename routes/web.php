@@ -8,8 +8,11 @@ use App\Http\Controllers\auth\VerificationController;
 use App\Http\Controllers\DashbordController;
 use App\Http\Controllers\laporan\LaporanGuruController;
 use App\Http\Controllers\laporan\LaporanSiswaController;
+use App\Http\Controllers\master_data\GuruPiketController;
+use App\Http\Controllers\master_data\JadwalController;
 use App\Http\Controllers\master_data\KelasController;
 use App\Http\Controllers\master_data\MapelController;
+use App\Http\Controllers\master_data\TahunAjaranController;
 use App\Http\Controllers\master_data\WalikelasController;
 use App\Http\Controllers\presensi\GuruController;
 use App\Http\Controllers\presensi\SiswaController;
@@ -40,7 +43,7 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'index')->name('login')->middleware('guest');
     Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout')->middleware('auth');
+    Route::get('/logout', 'logout')->name('logout')->middleware('auth:web,wali');
 });
 
 Route::controller(RegisterController::class)->group(function () {
@@ -52,6 +55,8 @@ Route::middleware(['auth:web,wali', 'verified'])->group(function () {
     Route::resource('siswa', SiswaController::class);
     Route::resource('mapel', MapelController::class);
     Route::resource('kelas', KelasController::class);
+    Route::resource('guru-piket', GuruPiketController::class);
+    Route::resource('tahun-ajaran', TahunAjaranController::class);
     Route::get('DaftarPresensi', function () {
         return view('pages.presensi.index');
     })->name('DaftarPresensi');
@@ -75,5 +80,11 @@ Route::middleware(['auth:web,wali', 'verified'])->group(function () {
     });
     Route::prefix('akun')->name('akun.')->controller(AkunController::class)->group(function () {
         Route::get('/', 'index');
+        Route::patch('/update-profil', 'update_profil')->name('updateProfil');
+        Route::patch('/update-data/{id}', 'update_data')->name('updateData');
+    });
+    Route::prefix('jadwal-kelas')->name('jadwal.')->controller(JadwalController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/detail/{id}', 'show_kelas')->name('detail');
     });
 });

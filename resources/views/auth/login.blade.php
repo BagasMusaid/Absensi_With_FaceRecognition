@@ -9,14 +9,20 @@
 
             <div class="grid  gap-8 grid-cols-1">
                 <div class="flex flex-col ">
-                    <h2 class="uppercase text-center mb-8 font-bold text-2xl text-gray-900">login</h2>
+                    <div class="mx-auto">
+                        <img src="{{ asset('asset/images/sekolah.png') }}" class="h-20 me-3" alt="logo sekolah" />
+                    </div>
+                    <h2 class="uppercase text-center mb-5 md:mb-8 mt-2 font-bold text-base md:text-xl text-gray-900">
+                        Aplikasi
+                        Presensi Siswa</h2>
+
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="relative">
                             <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Email</label>
                             <input type="email" id="email" name="email" value="{{ old('email') }}" autofocus
-                                class="block w-full p-4 ps-5 text-sm {{ session('loginerror') ? 'border-red-600' : '' }} text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                class="block w-full p-3 md:p-4 ps-5 text-sm {{ session('loginerror') ? 'border-red-600' : '' }} text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="email" />
                             <div class="mt-4">
                                 <label for="password"
@@ -24,7 +30,7 @@
                                 <div class="relative">
                                     <input id="password" type="password" name="password" autocomplete="current-password"
                                         placeholder="password"
-                                        class="block w-full p-4 pr-12 text-sm {{ session('loginerror') ? 'border-red-600' : '' }} text-gray-900 border border-gray-300 rounded-lg bg-gray-100 focus:ring-blue-500
+                                        class="block w-full p-3 md:p-4 pr-12 text-sm {{ session('loginerror') ? 'border-red-600' : '' }} text-gray-900 border border-gray-300 rounded-lg bg-gray-100 focus:ring-blue-500
                                         focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
                                     <!-- Icon Mata -->
@@ -63,7 +69,7 @@
 
                             <div class="mt-4">
                                 <button type="submit"
-                                    class=" w-11/12 mx-auto block py-3 text-base font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple
+                                    class=" w-11/12 mx-auto block py-2 md:py-3 text-base font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple
                                     -800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{ __('Masuk') }}</button>
                             </div>
                         </div>

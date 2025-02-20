@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateKelasRequest extends FormRequest
+class StoreGuruPiketRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,29 +24,34 @@ class UpdateKelasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_kelass' => 'required',
+            'guru_id' => 'required',
             'kd_tahun_ajaran' => 'required',
-            'catatan' => 'nullable'
+            'hari' => 'required',
+            'password' => 'required|string|min:8',
         ];
     }
     public function messages(): array
     {
         return [
-            'nama_kelass.required' => 'Nama Kelas Wajib Diisi',
-            'kd_tahun_ajaran.required' => 'Tahun Ajaran Wajib Diisi',
+            'guru_id.required' => 'Harus Pilih Nama Guru Piket!',
+            'kd_tahun_ajaran.required' => ' Tahun Ajaran Tidak Boleh Kosong!',
+            'hari.required' => 'Hari Tidak Boleh Kosong!',
+            'password.required' => 'Password tidak boleh kosong!',
+            'password.min' => 'Password minimal 8 karakter',
         ];
     }
     public function attributes(): array
     {
         return [
-            'nama_kelass' => 'nama_kelas',
+            'guru_id' => 'guru_id',
             'kd_tahun_ajaran' => 'kd_tahun_ajaran',
-            'catatan' => 'catatan',
+            'hari' => 'hari',
+            'password' => 'password',
         ];
     }
     public function failedValidation(Validator $validator)
     {
-        alert()->error('Gagal Update Data', 'Periksa Kembali Inputan Anda');
+        alert()->error('Gagal Tambah Data', 'Periksa Kembali Inputan Anda');
         throw new HttpResponseException(
             redirect()->back()->withErrors($validator)->withInput()
         );

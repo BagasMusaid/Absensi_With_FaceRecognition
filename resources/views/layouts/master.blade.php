@@ -15,6 +15,7 @@
     @include('layouts.header')
     @include('layouts.sidebar')
     @yield('content')
+    @include('components.loading')
     @include('layouts.footer')
     @include('sweetalert::alert')
     @vite('resources/js/app.js')

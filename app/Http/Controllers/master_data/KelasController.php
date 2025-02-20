@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\master_data\StoreKelasRequest;
 use App\Http\Requests\master_data\UpdateKelasRequest;
 use App\Models\master_data\kelas;
+use App\Models\master_data\TahunAjaran;
 use App\Models\master_data\Walikelas;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
@@ -19,9 +20,7 @@ class KelasController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
-        // $pickWkId = Kelas::pluck('walikelas_id')->toArray();
-        // $walas = Walikelas::with('guru')->whereNotIn('id', $pickWkId)->get();  // Mengambil wali kelas yang belum digunakan
-        $kelasQuery = Kelas::query();
+        $kelasQuery = Kelas::with('tahun_ajaran');
         if ($search) {
             $kelasQuery->where(function ($query) use ($search) {
                 $query->where('nama_kelas', 'like', "%$search%")
@@ -30,12 +29,13 @@ class KelasController extends Controller
             });
         }
         $kelas = $kelasQuery->paginate(5);
+        $tahunAjaran = TahunAjaran::all();
         if ($request->ajax()) {
-            return view('pages.kelas.index', compact('kelas'))->render();
+            return view('pages.kelas.index', compact('kelas', 'tahunAjaran'))->render();
         }
 
 
-        return view('pages.kelas.index', compact('kelas'));
+        return view('pages.kelas.index', compact('kelas', 'tahunAjaran'));
     }
 
     /**
@@ -84,7 +84,7 @@ class KelasController extends Controller
         try {
             kelas::where('id', $id)->update([
                 'nama_kelas' => $request->nama_kelass,
-                'tahun_ajaran' => $request->tahun_ajaran,
+                'kd_tahun_ajaran' => $request->kd_tahun_ajaran,
                 'catatan' => $request->catatan
             ]);
             alert()->success('Berhasil', 'Data Berhasil Diubah');

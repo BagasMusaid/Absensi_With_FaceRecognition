@@ -113,19 +113,28 @@
 @endsection
 @push('scripts')
     <script>
+        let delayTimer;
         $("#search").on("input", function() {
-            let search = $(this).val();
-            $.ajax({
-                url: "{{ route('walikelas.index') }}",
-                type: "GET",
-                data: {
-                    search: search,
-                },
-                success: function(data) {
-                    // Only refresh the #guru-list content
-                    $("#wali-list").html($(data).find("#wali-list").html());
-                },
-            });
+            clearTimeout(delayTimer);
+            let search = $(this).val().trim();
+            delayTimer = setTimeout(() => {
+                $.ajax({
+                    url: "{{ route('walikelas.index') }}",
+                    type: "GET",
+                    data: {
+                        search: search
+                    },
+                    beforeSend: function() {
+                        $("#loading").show();
+                    },
+                    success: function(data) {
+                        $("#wali-list").html($(data).find("#wali-list").html());
+                    },
+                    complete: function() {
+                        $("#loading").hide();
+                    }
+                });
+            }, 300);
         });
     </script>
 @endpush

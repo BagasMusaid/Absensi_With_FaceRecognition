@@ -29,8 +29,10 @@ class SiswaController extends Controller
                     });
             });
         }
+
         $datas = $querySiswa->paginate(5);
         $kelas = kelas::all();
+
 
         if ($request->ajax()) {
             return view('pages.siswa.index', compact('datas', 'kelas'))->render();

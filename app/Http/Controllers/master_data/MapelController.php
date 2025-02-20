@@ -14,13 +14,26 @@ class MapelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->search;
         $mapelQuery = mapel::with('kelas');
+        if (!empty($search)) {
+            $mapelQuery->where(function ($query) use ($search) {
+                $query->where('nama_mapel', 'like', "%$search%")
+                    ->orWhere('hari', 'like', "%$search%")
+                    ->orWhereHas('kelas', function ($query) use ($search) {
+                        $query->where('nama_kelas', 'like', "%$search%");
+                    });
+            });
+        }
         $kelas = kelas::all();
-        $mapels = $mapelQuery->paginate(5);
+        $mapels = $mapelQuery->paginate(6);
+        if ($request->ajax()) {
+            return view('pages.mapel.index', compact('mapels', 'kelas'))->render();
+        }
 
-        return view('pages.mapel.index', compact('mapels', 'kelas',));
+        return view('pages.mapel.index', compact('mapels', 'kelas'));
     }
 
     /**

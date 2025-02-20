@@ -134,11 +134,37 @@
                 </tbody>
             </table>
         </div>
-        {{-- <div class="mt-3">
-            {{ $kelas->links() }}
-        </div> --}}
+        <div class="mt-3">
+            {{ $mapels->links() }}
+        </div>
     </div>
     @include('pages.mapel.create')
 @endsection
 @push('scripts')
+    <script>
+        let delayTimer;
+        $("#search").on("input", function() {
+            clearTimeout(delayTimer);
+            let search = $(this).val().trim();
+
+            delayTimer = setTimeout(() => {
+                $.ajax({
+                    url: "{{ route('mapel.index') }}",
+                    type: "GET",
+                    data: {
+                        search: search
+                    },
+                    beforeSend: function() {
+                        $("#loading").show(); // Menampilkan indikator loading
+                    },
+                    success: function(data) {
+                        $("#mapel-list").html($(data).find("#mapel-list").html());
+                    },
+                    complete: function() {
+                        $("#loading").hide(); // Sembunyikan indikator setelah data didapat
+                    }
+                });
+            }, 300); // Tunggu 300ms setelah user berhenti mengetik
+        });
+    </script>
 @endpush

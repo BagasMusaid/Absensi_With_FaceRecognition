@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\master_data;
 
-use Illuminate\Contracts\Validation\Validator;
+use Dotenv\Validator;
+use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreKelasRequest extends FormRequest
+class StoreTahunAjaranRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,29 +25,30 @@ class StoreKelasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_kelas' => 'required',
-            'kd_tahun_ajaran' => 'required',
-            'catatan' => 'nullable'
-
+            'tahun_mulai' => 'required|numeric',
+            'tahun_selesai' => 'required|numeric',
+            'semester' => 'required'
         ];
     }
     public function messages(): array
     {
         return [
-            'nama_kelas.required' => 'Nama Kelas Wajib Diisi',
-            'kd_tahun_ajaran.required' => 'Tahun Ajaran Wajib Diisi',
-
+            'tahun_mulai.required' => 'Tahun Ajaran Mulai Wajib Diisi',
+            'tahun_selesai.required' => 'Tahun Ajaran Selesai Wajib Diisi',
+            'tahun_mulai.numeric' => 'Tahun Ajaran Mulai Harus Berupa Angka',
+            'tahun_selesai.numeric' => 'Tahun Ajaran Selesai Harus Berupa Angka',
+            'semester.required' => 'Semester Wajib Diisi'
         ];
     }
     public function attributes(): array
     {
         return [
-            'nama_kelas' => 'nama_kelas',
-            'kd_tahun_ajaran' => 'kd_tahun_ajaran',
-            'catatan' => 'catatan',
+            'tahun_mulai' => 'tahun_mulai',
+            'tahun_selesai' => 'tahun_selesai',
+            'semester' => 'semester',
         ];
     }
-    public function failedValidation(Validator $validator)
+    public function failedValidation(ValidationValidator $validator)
     {
         alert()->error('Gagal Tambah Data', 'Periksa Kembali Inputan Anda');
         throw new HttpResponseException(

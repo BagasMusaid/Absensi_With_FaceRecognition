@@ -63,7 +63,8 @@
                             <td class="px-8 py-3 text-sm font-semibold capitalize text-center"><span>Kelas
                                 </span>{{ $ks->nama_kelas }}
                             </td>
-                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">{{ $ks->tahun_ajaran }}
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $ks->tahun_ajaran->tahun_mulai }}/{{ $ks->tahun_ajaran->tahun_selesai }}
                             </td>
                             <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
                                 {{ $ks->catatan ? $ks->catatan : 'Tidak Ada' }}
@@ -131,21 +132,28 @@
 @endsection
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#search').on('input', function() {
-                let search = $(this).val();
+        let delayTimer;
+        $("#search").on("input", function() {
+            clearTimeout(delayTimer);
+            let search = $(this).val().trim();
+            delayTimer = setTimeout(() => {
                 $.ajax({
                     url: "{{ route('kelas.index') }}",
-                    method: "GET",
+                    type: "GET",
                     data: {
                         search: search
                     },
+                    beforeSend: function() {
+                        $("#loading").show();
+                    },
                     success: function(data) {
-                        $('#kelas-list').html($(data).find('#kelas-list').html());
+                        $("#kelas-list").html($(data).find("#kelas-list").html());
+                    },
+                    complete: function() {
+                        $("#loading").hide();
                     }
-                })
-            });
-
+                });
+            }, 300);
         });
     </script>
 @endpush
