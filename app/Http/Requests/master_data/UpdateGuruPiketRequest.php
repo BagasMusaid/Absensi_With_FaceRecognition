@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateKelasRequest extends FormRequest
+class UpdateGuruPiketRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,27 +21,29 @@ class UpdateKelasRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
         return [
-            'nama_kelass' => 'required',
+            'guru_id' => 'required',
             'kd_tahun_ajaran' => 'required',
-            'catatan' => 'nullable'
+            'hari' => 'required',
         ];
     }
     public function messages(): array
     {
         return [
-            'nama_kelass.required' => 'Nama Kelas Wajib Diisi',
-            'kd_tahun_ajaran.required' => 'Tahun Ajaran Wajib Diisi',
+            'guru_id.required' => 'Nama guru harus diisi!',
+            'kd_tahun_ajaran.required' => 'Kode tahun ajaran harus diisi!',
+            'hari.required' => 'Hari harus diisi!',
         ];
     }
     public function attributes(): array
     {
         return [
-            'nama_kelass' => 'nama_kelas',
+            'guru_id' => 'guru_id',
             'kd_tahun_ajaran' => 'kd_tahun_ajaran',
-            'catatan' => 'catatan',
+            'hari' => 'hari'
         ];
     }
     public function failedValidation(Validator $validator)

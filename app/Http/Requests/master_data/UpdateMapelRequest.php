@@ -53,7 +53,7 @@ class UpdateMapelRequest extends FormRequest
     }
     public function failedValidation(Validator $validator)
     {
-        alert()->error('Gagal Tambah Data', 'Periksa Kembali Inputan Anda');
+        alert()->error('Gagal Ubah Data', 'Periksa Kembali Inputan Anda');
         throw new HttpResponseException(
             redirect()->back()->withErrors($validator)->withInput()
         );

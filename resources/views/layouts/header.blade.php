@@ -69,12 +69,12 @@
                         <ul class="py-1" role="none">
                             <li>
                                 <a href="{{ url('dashbord') }}"
-                                    class="block px-4 py-2 text-sm {{ active_class(['dashbord']) }} text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    class="block px-4 py-2 text-sm {{ active_class(['dashbord']) }} text-gray-700  dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Dashboard</a>
                             </li>
                             <li>
                                 <a href="{{ url('akun') }}"
-                                    class="block px-4 {{ active_class(['akun']) }} py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    class="block px-4 {{ active_class(['akun']) }} py-2 text-sm text-gray-700  dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Account</a>
                             </li>
                             <li class="cursor-pointer">

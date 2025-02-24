@@ -71,9 +71,9 @@
                             <td class="px-2 py-3 text-center">{{ $GP->tahun_ajaran->semester }}</td>
                             <td class="px-5 py-3 text-center">
                                 {{ $GP->tahun_ajaran->tahun_mulai }}/{{ $GP->tahun_ajaran->tahun_selesai }}</td>
-                            <td class="px-5 py-3 text-center flex items-center justify-center">
+                            <td class="px-5 py-3 ">
                                 <!-- Modal toggle -->
-                                <div>
+                                <div class="flex items-center justify-center ">
                                     <a type="button" data-modal-target="edit-guru-piket-{{ $GP->id }}"
                                         data-modal-show="edit-guru-piket-{{ $GP->id }}"
                                         data-tooltip-target="tooltip-edit-{{ $loop->iteration }}">
@@ -132,3 +132,31 @@
     </div>
     @include('pages.guru-piket.create')
 @endsection
+@push('scripts')
+    <script>
+        let delayTimer;
+        $("#search").on("input", function() {
+            clearTimeout(delayTimer);
+            let search = $(this).val().trim();
+
+            delayTimer = setTimeout(() => {
+                $.ajax({
+                    url: "{{ route('guru-piket.index') }}",
+                    type: "GET",
+                    data: {
+                        search: search
+                    },
+                    beforeSend: function() {
+                        $("#loading").show(); // Menampilkan indikator loading
+                    },
+                    success: function(data) {
+                        $("#guru-piket-list").html($(data).find("#guru-piket-list").html());
+                    },
+                    complete: function() {
+                        $("#loading").hide(); // Sembunyikan indikator setelah data didapat
+                    }
+                });
+            }, 300); // Tunggu 300ms setelah user berhenti mengetik
+        });
+    </script>
+@endpush
