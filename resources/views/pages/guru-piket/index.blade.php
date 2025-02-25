@@ -74,9 +74,10 @@
                             <td class="px-5 py-3 ">
                                 <!-- Modal toggle -->
                                 <div class="flex items-center justify-center ">
-                                    <a type="button" data-modal-target="edit-guru-piket-{{ $GP->id }}"
+                                    <a type="button" id="edit-btn" data-modal-target="edit-guru-piket-{{ $GP->id }}"
                                         data-modal-show="edit-guru-piket-{{ $GP->id }}"
-                                        data-tooltip-target="tooltip-edit-{{ $loop->iteration }}">
+                                        data-tooltip-target="tooltip-edit-{{ $loop->iteration }}"
+                                        data-id="{{ $GP->id }}">
                                         <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <title />
@@ -95,7 +96,7 @@
                                         Edit
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
-                                    @include('pages.guru-piket.edit')
+                                    @include('pages.guru-piket.edit', ['GP' => $GP])
                                 </div>
                                 <form action="{{ route('guru-piket.destroy', $GP->id) }}" method="POST"
                                     class="delete-form">
@@ -147,16 +148,29 @@
                         search: search
                     },
                     beforeSend: function() {
-                        $("#loading").show(); // Menampilkan indikator loading
+                        $("#loading").show();
                     },
                     success: function(data) {
-                        $("#guru-piket-list").html($(data).find("#guru-piket-list").html());
+                        $("#guru-piket-list").html($(data).find("#guru-piket-list")
+                            .html());
+                        attachDeleteEvent
+                            (); // Pasang ulang event setelah update AJAX
+                        $(document).on("click", "#edit-btn", function() {
+                            let modalId = $(this).data("modal-target");
+                            $("#" + modalId).removeClass("hidden").addClass(
+                                "flex backdrop-blur-sm bg-opacity-10 drop-shadow-sm bg-gray-500"
+                            );
+                        });
+                        $(document).on("click", "[data-modal-hide]", function() {
+                            let modalId = $(this).data("modal-hide");
+                            $("#" + modalId).addClass("hidden");
+                        });
                     },
                     complete: function() {
-                        $("#loading").hide(); // Sembunyikan indikator setelah data didapat
+                        $("#loading").hide();
                     }
                 });
-            }, 300); // Tunggu 300ms setelah user berhenti mengetik
+            }, 300);
         });
     </script>
 @endpush

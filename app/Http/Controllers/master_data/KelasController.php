@@ -24,8 +24,11 @@ class KelasController extends Controller
         if ($search) {
             $kelasQuery->where(function ($query) use ($search) {
                 $query->where('nama_kelas', 'like', "%$search%")
-                    ->orWhere('tahun_ajaran', 'like', "%$search%")
-                    ->orWhere('catatan', 'like', "%$search%");
+                    ->orWhere('catatan', 'like', "%$search%")
+                    ->orWhereHas('tahun_ajaran', function ($query) use ($search) {
+                        $query->where('tahun_mulai', 'like', "%$search%")
+                            ->orWhere('tahun_selesai', 'like', "%$search%");
+                    });
             });
         }
         $kelas = $kelasQuery->paginate(5);

@@ -23,6 +23,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     @stack('scripts')
     <script src="{{ asset('asset/js/master.js') }}"></script>
+    <script src="{{ asset('asset/js/delete.js') }}"></script>
 
 </body>
 

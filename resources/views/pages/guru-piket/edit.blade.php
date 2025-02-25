@@ -1,11 +1,10 @@
         <!-- Edit user modal -->
         <div id="edit-guru-piket-{{ $GP->id }}" tabindex="-1" aria-hidden="true"
-            class="fixed top-0 left-0 right-0 z-50 items-center backdrop-blur-sm bg-opacity-95 drop-shadow-sm  justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            class="fixed top-0 left-0 right-0 z-50 items-center  backdrop-blur-sm bg-opacity-20 d justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative w-full max-w-lg max-h-full">
                 <!-- Modal content -->
                 <form class="relative bg-white rounded-lg shadow dark:bg-gray-700"
                     action="{{ route('guru-piket.update', $GP->id) }}" method="POST">
-                    @csrf
                     @method('PUT')
                     <!-- Modal header -->
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">

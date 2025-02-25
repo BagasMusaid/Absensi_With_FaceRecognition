@@ -129,6 +129,8 @@
                     },
                     success: function(data) {
                         $("#wali-list").html($(data).find("#wali-list").html());
+                        attachDeleteEvent
+                            ();
                     },
                     complete: function() {
                         $("#loading").hide();
