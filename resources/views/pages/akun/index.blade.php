@@ -13,17 +13,44 @@
             <div class="md:flex mx-5 items-center justify-between ">
                 <div class="p-5 mt-10">
                     <div class="relative justify-center w-60 h-60 mx-auto">
-                        <img src="{{ Auth::guard('wali')->user()->guru->foto_profil ? url(Storage::url('public/profil_wali/' . Auth::guard('wali')->user()->guru->foto_profil)) : asset('asset/images/profie.jpg') }}"
-                            alt="Profile Picture"
+                        @php
+                            if (Auth::guard('wali')->check()) {
+                                $user = Auth::guard('wali')->user();
+                                $foto =
+                                    $user->guru && $user->foto_profil
+                                        ? url(Storage::url('public/profil_wali/' . $user->foto_profil))
+                                        : asset('asset/images/profie.jpg');
+                            } elseif (Auth::guard('guru_piket')->check()) {
+                                $user = Auth::guard('guru_piket')->user();
+                                $foto = $user->foto_profil
+                                    ? url(Storage::url('public/profil_guru_piket/' . $user->foto_profil))
+                                    : asset('asset/images/profie.jpg');
+                            } elseif (Auth::guard('gurus')->check()) {
+                                $user = Auth::guard('gurus')->user();
+                                $foto = $user->foto_profil
+                                    ? url(Storage::url('public/profil_guru/' . $user->foto_profil))
+                                    : asset('asset/images/profie.jpg');
+                            } elseif (Auth::guard('web')->check()) {
+                                $user = Auth::guard('web')->user();
+                                $foto = $user->foto_profil
+                                    ? url(Storage::url('public/profil_user/' . $user->foto_profil))
+                                    : asset('asset/images/profie.jpg');
+                            } else {
+                                $foto = asset('asset/images/profie.jpg');
+                            }
+                        @endphp
+
+                        <img src="{{ $foto }}" alt="Profile Picture"
                             class="w-full h-full rounded-full object-cover border-2 border-white shadow-lg">
+
                         <div
                             class="absolute bottom-3 right-5 bg-purple-700 p-1.5 rounded-full border-2 border-white cursor-pointer">
                             <a data-modal-target="edit-profil" data-modal-toggle="edit-profil">
                                 <svg class="feather feather-camera w-7 h-7 text-white" fill="none" stroke="currentColor"
                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                    <path d=" M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0
+                                                                                1 2 2z" />
                                     <circle cx="12" cy="13" r="4" />
                                 </svg>
                             </a>
@@ -45,18 +72,14 @@
                                 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 
                                 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 
                                 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="Masukan nama"
-                                value="{{ Auth::guard('wali')->check() ? Auth::guard('wali')->user()->guru->nama_guru : Auth::user()->name }}"
-                                autocomplete="off">
+                                placeholder="Masukan nama" value="{{ getUserAttribute('nama_guru') }}" autocomplete="off">
                         </div>
                         <div class="w-full">
                             <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                             <input type="text" name="email" id="email" disabled
                                 class="bg-gray-50 border text-gray-900  border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="Masukan email"
-                                value="{{ Auth::guard('wali')->check() ? Auth::guard('wali')->user()->guru->email : Auth::user()->email }}"
-                                autocomplete="off">
+                                placeholder="Masukan email" value="{{ getUserAttribute('email') }}" autocomplete="off">
                         </div>
                     </div>
                     <div class="md:flex md:flex-row gap-4 justify-between mt-10">
@@ -67,25 +90,24 @@
                                 <div class="border border-gray-300 pt-1.5 pb-2 pl-2 rounded-lg w-full bg-gray-50">
                                     <input type="checkbox" name="gender" disabled
                                         class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-blue-500"
-                                        {{ Auth::guard('wali')->check() && Auth::guard('wali')->user()->guru->jenis_kelamin == 'laki-laki' ? 'checked' : '' }}>
+                                        {{ getUserAttribute('jenis_kelamin') == 'laki-laki' ? 'checked' : '' }}>
                                     <span class="text-gray-700 text-xs xl:text-base">Laki-laki</span>
                                 </div>
                                 <div class="border border-gray-300 pt-1.5 pb-2 pl-2 rounded-lg w-full bg-gray-50">
                                     <input type="checkbox" name="gender" disabled
-                                        class="w-4 h-4  text-purple-600  border-gray-300 rounded focus:ring-blue-500"
-                                        {{ Auth::guard('wali')->check() && Auth::guard('wali')->user()->guru->jenis_kelamin == 'perempuan' ? 'checked' : '' }}>
+                                        class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-blue-500"
+                                        {{ getUserAttribute('jenis_kelamin') == 'perempuan' ? 'checked' : '' }}>
                                     <span class="text-gray-700 text-xs xl:text-base">Perempuan</span>
                                 </div>
                             </div>
                         </div>
+
                         <div class="w-full mt-10 md:mt-0">
                             <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat</label>
                             <input type="text" name="email" id="email" disabled
                                 class="bg-gray-50 border text-gray-900  border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="Masukan email"
-                                value="{{ Auth::guard('wali')->check() ? Auth::guard('wali')->user()->guru->alamat : Auth::user()->email }}"
-                                autocomplete="off">
+                                placeholder="Masukan email" value="{{ getUserAttribute('alamat') }}" autocomplete="off">
                         </div>
                     </div>
                     <div class="mt-10 mb-10">

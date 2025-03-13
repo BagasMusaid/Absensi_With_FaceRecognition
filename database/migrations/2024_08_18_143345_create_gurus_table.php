@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('NIP')->unique();
             $table->string('nama_guru');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
+            $table->enum('kepalasekolah', ['ya', 'tidak']);
             $table->string('alamat');
             $table->string('no_telp');
             $table->string('email')->unique();
             $table->string('foto_profil')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

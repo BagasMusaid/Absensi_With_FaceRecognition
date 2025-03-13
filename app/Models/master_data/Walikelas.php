@@ -17,7 +17,8 @@ class Walikelas extends Authenticatable
     protected $fillable = [
         'guru_id',
         'kelas_id',
-        'password'
+        'password',
+        'foto_profil'
     ];
 
     public function getAuthPassword()

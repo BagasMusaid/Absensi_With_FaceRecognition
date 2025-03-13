@@ -13,11 +13,12 @@ class DashbordController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:web,wali');
+        $this->middleware('auth:web,wali,guru_piket,gurus');
     }
 
     public function index(Request $request)
     {
+
         $hour = now()->hour; // Ambil jam saat ini
 
         if ($hour >= 5 && $hour < 12) {

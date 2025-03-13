@@ -28,7 +28,7 @@
                         <div class="grid grid-cols-6 gap-6">
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="nama_guru"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                    class="block mb-2 text-sm font-medium text-start text-gray-900 dark:text-white">Nama
                                     Guru</label>
                                 <input type="text" name="nama_guru" id="nama_guru"
                                     class="shadow-sm bg-gray-50 border {{ $errors->has('nama_guru') ? 'border-red-600' : 'border-gray-300' }} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="nip_guru"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIP
+                                    class="block mb-2 text-sm font-medium text-start text-gray-900 dark:text-white">NIP
                                     Guru</label>
                                 <input type="text" inputmode="numeric" name="nip_guru" id="nip_guru"
                                     class="shadow-sm bg-gray-50 border border-gray-300 {{ $errors->has('nip_guru') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="gender_guru"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis
+                                    class="block mb-2 text-sm font-medium text-start text-gray-900 dark:text-white">Jenis
                                     Kelamin</label>
                                 <select id="gender_guru" name="gender_guru"
                                     class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 {{ $errors->has('gender_guru') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
@@ -74,7 +74,8 @@
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="tlp_guru"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Telepone
+                                    class="block mb-2 text-sm font-medium text-start text-gray-900 dark:text-white">No
+                                    Telepone
                                 </label>
                                 <input type="text" inputmode="numeric" name="tlp_guru" id="tlp_guru"
                                     class="shadow-sm bg-gray-50 border {{ $errors->has('tlp_guru') ? 'border-red-600' : 'border-gray-300' }} border-gray-300  text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -86,7 +87,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="email_guru"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                    class="block mb-2 text-sm font-medium text-start text-gray-900 dark:text-white">Email</label>
                                 <input type="email" name="email_guru" id="email_guru"
                                     class="shadow-sm bg-gray-50 border border-gray-300 {{ $errors->has('email_guru') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     value="{{ $item->email }}">
@@ -97,7 +98,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="alamat_guru"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat</label>
+                                    class="block mb-2 text-sm font-medium text-start text-gray-900 dark:text-white">Alamat</label>
                                 <input type="text" name="alamat_guru" id="alamat_guru"
                                     class="shadow-sm bg-gray-50 border border-gray-300 {{ $errors->has('alamat_guru') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     value="{{ $item->alamat }}">

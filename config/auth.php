@@ -46,6 +46,14 @@ return [
             'driver' => 'session',
             'provider' => 'walikelas',
         ],
+        'guru_piket' => [
+            'driver' => 'session',
+            'provider' => 'gurupiket',
+        ],
+        'gurus' => [
+            'driver' => 'session',
+            'provider' => 'guru',
+        ],
     ],
 
     /*
@@ -73,6 +81,14 @@ return [
         'walikelas' => [
             'driver' => 'eloquent',
             'model' =>  App\Models\master_data\Walikelas::class,
+        ],
+        'gurupiket' => [
+            'driver' => 'eloquent',
+            'model' =>  App\Models\master_data\GuruPiket::class,
+        ],
+        'guru' => [
+            'driver' => 'eloquent',
+            'model' =>  App\Models\presensi\Guru::class,
         ],
 
         // 'users' => [
@@ -109,6 +125,18 @@ return [
         ],
         'walikelas' => [
             'provider' => 'walikelas',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'gurupiket' => [
+            'provider' => 'gurupiket',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'guru' => [
+            'provider' => 'guru',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

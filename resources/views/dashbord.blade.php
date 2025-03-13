@@ -10,9 +10,12 @@
                                 Walikelas
                             @elseif(Auth::guard('web')->check())
                                 Admin
-                            @else
-                                User
+                            @elseif(Auth::guard('guru_piket')->check())
+                                Guru Piket
+                            @elseif(Auth::guard('gurus')->check())
+                                Kepala Sekolah
                             @endif
+
                         </span></h1>
                     <p class="text-white font-medium text-xs md:text-base">Bagaimana kabarmu hari ini ?</p>
                 </div>
@@ -24,48 +27,43 @@
     </div>
     <div class="mx-4 md:pl-4 sm:ml-64">
         <div class="p-4 bg-white border border-slate-100 rounded-lg dark:border-gray-700">
-            {{-- <h1 class="mb-5 text-sm md:text-xl font-semibold text-gray-800 capitalize">{{ $greeting }} <span
-                    class="font-bold">
-                    @if (Auth::guard('wali')->check())
-                        {{ Auth::guard('wali')->user()->guru->nama_guru }}
-                    @elseif(Auth::guard('web')->check())
-                        {{ Auth::guard('web')->user()->name }}
-                    @endif
-                </span>
-            </h1> --}}
+
             <div class="bg-slate-100 p-3">
                 {{-- presensi --}}
-                <div id="alert-1"
-                    class="flex justify-end items-end p-1 mb-4 text-blue-800 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-blue-400"
-                    role="alert">
-                    <h2
-                        class="uppercase text-[6.5px] md:text-base text-gray-600 md:mb-1 mb-2 pb-2 ml-3 md:ml-6 font-semibold ">
-                        Klik Proses
-                        Presensi
-                        untuk melakukan
-                        presensi</h2>
-                    <div class="ml-auto flex items-center">
-                        {{-- <a href="{{ route('DaftarPresensi') }}"
-                            class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
-                            Buat Pendaftaran Wajah
-                        </a> --}}
-                        <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
-                            class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
-                            Proses Presensi
-                        </a>
+                @can('akses-dashbord')
+                    <div id="alert-1"
+                        class="flex justify-end items-end p-1 mb-4 text-blue-800 rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-blue-400"
+                        role="alert">
+                        <h2
+                            class="uppercase text-[6.5px] md:text-base text-gray-600 md:mb-1 mb-2 pb-2 ml-3 md:ml-6 font-semibold ">
+                            Klik Proses
+                            Presensi
+                            untuk melakukan
+                            presensi</h2>
+                        <div class="ml-auto flex items-center">
+                            {{-- <a href="{{ route('DaftarPresensi') }}"
+                        class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
+                        Buat Pendaftaran Wajah
+                    </a> --}}
+                            <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
+                                class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
+                                Proses Presensi
+                            </a>
 
-                        <button type="button"
-                            class="ml-1 md:ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
-                            data-dismiss-target="#alert-1" aria-label="Close">
-                            <span class="sr-only">Close</span>
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                        </button>
+                            <button type="button"
+                                class="ml-1 md:ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
+                                data-dismiss-target="#alert-1" aria-label="Close">
+                                <span class="sr-only">Close</span>
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                @endcan
+
                 {{-- end presensi --}}
                 <div class="grid grid-cols-4 gap-4 mb-4">
                     <div

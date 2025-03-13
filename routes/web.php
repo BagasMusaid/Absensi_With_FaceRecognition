@@ -16,6 +16,9 @@ use App\Http\Controllers\master_data\TahunAjaranController;
 use App\Http\Controllers\master_data\WalikelasController;
 use App\Http\Controllers\presensi\GuruController;
 use App\Http\Controllers\presensi\SiswaController;
+use App\Http\Middleware\EnsureUserHasAccess;
+use App\Http\Middleware\EnsureUserIsGuru;
+use App\Http\Middleware\EnsureUserIsWalikelas;
 use Illuminate\Support\Facades\Route;
 
 // Auth::routes(['verify' => true]);
@@ -29,11 +32,8 @@ Route::prefix('email')->middleware('auth')->group(function () {
 });
 
 Route::get('/dashbord', [DashbordController::class, 'index'])
-    ->middleware(['auth:web,wali', 'verified'])->name('dashbord');
+    ->middleware(['auth:web,wali,guru_piket,gurus', 'verified'])->name('dashbord');
 
-Route::get('/presensi', function () {
-    return view('pages.presensi');
-})->name('presensi');
 Route::controller(ForgotPasswordController::class)->group(function () {
     Route::get('/forgot-password', 'index')->middleware('guest')->name('forgot');
     Route::post('forgot-password', 'forgotPasswordEmail')->name('password.email');
@@ -43,15 +43,40 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'index')->name('login')->middleware('guest');
     Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout')->middleware('auth:web,wali');
+    Route::get('/logout', 'logout')->name('logout')->middleware('auth:web,wali,guru_piket,gurus');
 });
 
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'create')->name('register')->middleware('guest');
     Route::post('/register', 'store');
 });
-Route::middleware(['auth:web,wali', 'verified'])->group(function () {
+Route::middleware(['auth:web,gurus,wali'])->group(function () {
     Route::resource('guru', GuruController::class);
+});
+Route::middleware([EnsureUserIsGuru::class])->group(function () {
+    Route::prefix('laporan-guru')->name('laporan-guru.')->controller(LaporanGuruController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/preview-guru', 'view_pdf')->name('viewGuru');
+        Route::get('/download-guru', 'download_pdf')->name('downloadGuru');
+        Route::get('/filter-guru', 'view_filter')->name('viewFilterGuru');
+        Route::get('/download-excel-guru', 'export_excel')->name('download-excel');
+    });
+});
+
+Route::middleware([EnsureUserIsGuru::class, EnsureUserIsWalikelas::class])->group(function () {
+    Route::prefix('laporan-siswa')->name('laporan-siswa.')->controller(LaporanSiswaController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/preview-siswa', 'preview_pdf')->name('viewSiswa');
+        Route::get('/download-siswa', 'download_pdf')->name('downloadSiswa');
+        Route::get('/download-excel-siswa', 'export_excel_siswa')->name('excelSiswa');
+        Route::get('/filter-siswa', 'filter')->name('filterSiswa');
+    });
+});
+
+Route::middleware(['auth:web,wali,guru_piket,gurus', 'verified'])->group(function () {
+    Route::get('/presensi', function () {
+        return view('pages.presensi');
+    })->name('presensi');
     Route::resource('siswa', SiswaController::class);
     Route::resource('mapel', MapelController::class);
     Route::resource('kelas', KelasController::class);
@@ -64,20 +89,6 @@ Route::middleware(['auth:web,wali', 'verified'])->group(function () {
         return view('pages.presensi.index');
     })->name('PresensiSiswa');
     Route::resource('walikelas', WalikelasController::class);
-    Route::prefix('laporan-guru')->name('laporan-guru.')->controller(LaporanGuruController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::get('/preview-guru', 'view_pdf')->name('viewGuru');
-        Route::get('/download-guru', 'download_pdf')->name('downloadGuru');
-        Route::get('/filter-guru', 'view_filter')->name('viewFilterGuru');
-        Route::get('/download-excel-guru', 'export_excel')->name('download-excel');
-    });
-    Route::prefix('laporan-siswa')->name('laporan-siswa.')->controller(LaporanSiswaController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::get('/preview-siswa', 'preview_pdf')->name('viewSiswa');
-        Route::get('/download-siswa', 'download_pdf')->name('downloadSiswa');
-        Route::get('/download-excel-siswa', 'export_excel_siswa')->name('excelSiswa');
-        Route::get('/filter-siswa', 'filter')->name('filterSiswa');
-    });
     Route::prefix('akun')->name('akun.')->controller(AkunController::class)->group(function () {
         Route::get('/', 'index');
         Route::patch('/update-profil', 'update_profil')->name('updateProfil');
@@ -88,3 +99,6 @@ Route::middleware(['auth:web,wali', 'verified'])->group(function () {
         Route::get('/detail/{id}', 'show_kelas')->name('detail');
     });
 });
+Route::get('/not-authorized', function () {
+    return view('errors.unauthorized');
+})->name('not-authorized');

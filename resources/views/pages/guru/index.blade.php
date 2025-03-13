@@ -4,18 +4,21 @@
         <div class="p-4 bg-white dark:border-gray-700 mt-20">
             <div
                 class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4  dark:bg-gray-900">
-                <div
-                    class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
-                    <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
-                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <line x1="12" x2="12" y1="5" y2="19" />
-                        <line x1="5" x2="19" y1="12" y2="12" />
-                    </svg>
-                    <a data-modal-target="tambah-modal" data-modal-toggle="tambah-modal"
-                        class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
-                        Guru</a>
-                </div>
+                @can('akses-admin')
+                    <div
+                        class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
+                        <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="12" x2="12" y1="5" y2="19" />
+                            <line x1="5" x2="19" y1="12" y2="12" />
+                        </svg>
+
+                        <a data-modal-target="tambah-modal" data-modal-toggle="tambah-modal"
+                            class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
+                            Guru</a>
+                    </div>
+                @endcan
                 <form>
                     <label for="search" class="sr-only">Search</label>
                     <div class="flex">
@@ -59,8 +62,13 @@
                             Email
                         </th>
                         <th scope="col" class="px-5 py-3 text-center">
-                            Action
+                            Kepala Sekolah
                         </th>
+                        @can('akses-admin')
+                            <th scope="col" class="px-5 py-3 text-center">
+                                Action
+                            </th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody id="guru-list">
@@ -76,57 +84,65 @@
                             <td class="px-5 py-3 text-center">{{ $item->jenis_kelamin }}</td>
                             <td class="px-5 py-3 text-center">{{ $item->no_telp }}</td>
                             <td class="px-5 py-3 text-center">{{ $item->email }}</td>
-                            <td class="px-5 py-3 text-center flex items-center">
-                                <!-- Modal toggle -->
-                                <div>
-                                    <a type="button" id="edit-btn" data-modal-target="edit-guru-{{ $item->kd_guru }}"
-                                        data-modal-show="edit-guru-{{ $item->kd_guru }}"
-                                        data-tooltip-target="tooltip-edit-{{ $loop->iteration }}"
-                                        data-id="{{ $item->kd_guru }}">
-                                        <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
-                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <title />
-                                            <path
-                                                d="M464.37,49.2a22.07,22.07,0,0,0-31.88-.76L414.18,66.69l31.18,31.1,18-17.91A22.16,22.16,0,0,0,464.37,49.2Z" />
-                                            <polygon
-                                                points="252.76 336 239.49 336 208 336 176 336 176 304 176 272.51 176 259.24 185.4 249.86 323.54 112 48 112 48 464 400 464 400 188.46 262.14 326.6 252.76 336" />
-                                            <polygon
-                                                points="400 143.16 432.79 110.3 401.7 79.21 368.85 112 400 112 400 143.16" />
-                                            <polygon
-                                                points="208 304 239.49 304 400 143.16 400 112 368.85 112 208 272.51 208 304" />
-                                        </svg>
-                                    </a>
-                                    <div id="tooltip-edit-{{ $loop->iteration }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
-                                        Edit
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                    @include('pages.guru.edit', ['item' => $item])
-                                </div>
-                                <form action="{{ route('guru.destroy', ['guru' => $item->kd_guru]) }}" method="POST"
-                                    class="delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button data-tooltip-target="tooltip-delete-{{ $loop->iteration }}" type="submit">
-                                        <svg class="w-6 h-6 mt-1 text-red-600 dark:text-gray-400" viewBox="0 0 512 512"
-                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <title />
-                                            <path d="M296,64H216a7.91,7.91,0,0,0-8,8V96h96V72A7.91,7.91,0,0,0,296,64Z"
-                                                style="fill:none" />
-                                            <path d="M292,64H220a4,4,0,0,0-4,4V96h80V68A4,4,0,0,0,292,64Z"
-                                                style="fill:none" />
-                                            <path
-                                                d="M447.55,96H336V48a16,16,0,0,0-16-16H192a16,16,0,0,0-16,16V96H64.45L64,136H97l20.09,314A32,32,0,0,0,149,480H363a32,32,0,0,0,31.93-29.95L415,136h33ZM176,416l-9-256h33l9,256Zm96,0H240V160h32ZM296,96H216V68a4,4,0,0,1,4-4h72a4,4,0,0,1,4,4Zm40,320H303l9-256h33Z" />
-                                        </svg>
-                                    </button>
-
-                                    <div id="tooltip-delete-{{ $loop->iteration }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Hapus
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </form>
+                            <td class="px-5 py-3 text-center">
+                                <h4
+                                    class="{{ trim($item->kepalasekolah) == 'ya' ? 'bg-purple-500 text-white' : 'bg-red-500 text-white' }} py-1 px-0.5 mx-3 font-medium text-xs rounded-md">
+                                    {{ $item->kepalasekolah }}
+                                </h4>
                             </td>
+                            @can('akses-admin')
+                                <td class="px-5 py-3 text-center flex items-center">
+                                    <!-- Modal toggle -->
+                                    <div>
+                                        <a type="button" id="edit-btn" data-modal-target="edit-guru-{{ $item->kd_guru }}"
+                                            data-modal-show="edit-guru-{{ $item->kd_guru }}"
+                                            data-tooltip-target="tooltip-edit-{{ $loop->iteration }}"
+                                            data-id="{{ $item->kd_guru }}">
+                                            <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
+                                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <title />
+                                                <path
+                                                    d="M464.37,49.2a22.07,22.07,0,0,0-31.88-.76L414.18,66.69l31.18,31.1,18-17.91A22.16,22.16,0,0,0,464.37,49.2Z" />
+                                                <polygon
+                                                    points="252.76 336 239.49 336 208 336 176 336 176 304 176 272.51 176 259.24 185.4 249.86 323.54 112 48 112 48 464 400 464 400 188.46 262.14 326.6 252.76 336" />
+                                                <polygon
+                                                    points="400 143.16 432.79 110.3 401.7 79.21 368.85 112 400 112 400 143.16" />
+                                                <polygon
+                                                    points="208 304 239.49 304 400 143.16 400 112 368.85 112 208 272.51 208 304" />
+                                            </svg>
+                                        </a>
+                                        <div id="tooltip-edit-{{ $loop->iteration }}" role="tooltip"
+                                            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
+                                            Edit
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+                                        @include('pages.guru.edit', ['item' => $item])
+                                    </div>
+                                    <form action="{{ route('guru.destroy', ['guru' => $item->kd_guru]) }}" method="POST"
+                                        class="delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button data-tooltip-target="tooltip-delete-{{ $loop->iteration }}" type="submit">
+                                            <svg class="w-6 h-6 mt-1 text-red-600 dark:text-gray-400" viewBox="0 0 512 512"
+                                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <title />
+                                                <path d="M296,64H216a7.91,7.91,0,0,0-8,8V96h96V72A7.91,7.91,0,0,0,296,64Z"
+                                                    style="fill:none" />
+                                                <path d="M292,64H220a4,4,0,0,0-4,4V96h80V68A4,4,0,0,0,292,64Z"
+                                                    style="fill:none" />
+                                                <path
+                                                    d="M447.55,96H336V48a16,16,0,0,0-16-16H192a16,16,0,0,0-16,16V96H64.45L64,136H97l20.09,314A32,32,0,0,0,149,480H363a32,32,0,0,0,31.93-29.95L415,136h33ZM176,416l-9-256h33l9,256Zm96,0H240V160h32ZM296,96H216V68a4,4,0,0,1,4-4h72a4,4,0,0,1,4,4Zm40,320H303l9-256h33Z" />
+                                            </svg>
+                                        </button>
+
+                                        <div id="tooltip-delete-{{ $loop->iteration }}" role="tooltip"
+                                            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            Hapus
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>
@@ -163,7 +179,7 @@
                         $(document).on("click", "#edit-btn", function() {
                             let modalId = $(this).data("modal-target");
                             $("#" + modalId).removeClass("hidden").addClass(
-                                "flex backdrop-blur-sm bg-opacity-10 drop-shadow-sm bg-gray-500"
+                                "flex backdrop-blur-sm bg-opacity-60 drop-shadow-sm bg-gray-50"
                             );
                         });
                         $(document).on("click", "[data-modal-hide]", function() {
@@ -176,6 +192,24 @@
                     }
                 });
             }, 300);
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectElement = document.getElementById("kepalasekolah");
+            let passwordContainer = document.getElementById("password-container");
+
+            function togglePasswordField() {
+                if (selectElement.value === "ya") {
+                    passwordContainer.classList.remove("hidden");
+                } else {
+                    passwordContainer.classList.add("hidden");
+                }
+            }
+
+            // Event listener untuk perubahan pilihan di dropdown
+            selectElement.addEventListener("change", togglePasswordField);
+
+            // Menjalankan fungsi saat halaman dimuat (untuk menangani old() value)
+            togglePasswordField();
         });
     </script>
 @endpush

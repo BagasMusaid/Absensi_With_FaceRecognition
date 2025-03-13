@@ -156,7 +156,7 @@
                         $(document).on("click", "#edit-btn", function() {
                             let modalId = $(this).data("modal-target");
                             $("#" + modalId).removeClass("hidden").addClass(
-                                "flex backdrop-blur-sm bg-opacity-10 drop-shadow-sm bg-gray-500"
+                                "flex backdrop-blur-sm bg-opacity-60 drop-shadow-sm bg-gray-300"
                             );
                         });
                         $(document).on("click", "[data-modal-hide]", function() {

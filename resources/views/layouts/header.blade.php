@@ -24,27 +24,62 @@
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
                     <div class="flex gap-2">
-                        <span class="mt-1.5 font-semibold hidden md:block text-sm">
-                            @if (Auth::guard('wali')->check())
-                                walikelas
-                            @elseif(Auth::guard('web')->check())
-                                admin
-                            @else
-                                User
-                            @endif
-                        </span>
+                        <div> <span class=" font-semibold hidden md:block text-sm text-end">
+                                @if (Auth::guard('wali')->check())
+                                    walikelas
+                                @elseif(Auth::guard('web')->check())
+                                    admin
+                                @elseif(Auth::guard('guru_piket')->check())
+                                    guru piket
+                                @elseif(Auth::guard('gurus')->check())
+                                    kepala sekolah
+                                @endif
+                            </span>
+                            <P class="text-[11px]  text-end">
+                                @if (Auth::guard('wali')->check())
+                                    {{ Auth::guard('wali')->user()->guru->nama_guru }}
+                                @elseif(Auth::guard('web')->check())
+                                    {{ Auth::guard('web')->user()->name }}
+                                @elseif(Auth::guard('guru_piket')->check())
+                                    {{ Auth::guard('guru_piket')->user()->guru->nama_guru }}
+                                @elseif(Auth::guard('gurus')->check())
+                                    {{ Auth::guard('gurus')->user()->nama_guru }}
+                                @else
+                                    Guest
+                                @endif
+                            </P>
+                        </div>
                         <button type="button"
-                            class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            class="flex text-sm bg-gray-800 rounded-full mb-1.5 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                             aria-expanded="false" data-dropdown-toggle="dropdown-user">
                             <span class="sr-only">Open user menu</span>
-                            <img class="w-8 h-8 rounded-full"
-                                src="
-    @if (Auth::guard('wali')->check() && Auth::guard('wali')->user()->guru->foto_profil) {{ url(Storage::url('public/profil_wali/' . Auth::guard('wali')->user()->guru->foto_profil)) }}
-    @elseif(Auth::guard('web')->check() && Auth::guard('web')->user()->foto_profil)
-        {{ url(Storage::url('public/profil_admin/' . Auth::guard('web')->user()->foto_profil)) }}
-    @else
-        {{ asset('asset/images/profie.jpg') }} @endif
-    "
+                            @php
+                                if (Auth::guard('wali')->check()) {
+                                    $user = Auth::guard('wali')->user();
+                                    $foto =
+                                        $user->guru && $user->foto_profil
+                                            ? url(Storage::url('public/profil_wali/' . $user->foto_profil))
+                                            : asset('asset/images/profie.jpg');
+                                } elseif (Auth::guard('guru_piket')->check()) {
+                                    $user = Auth::guard('guru_piket')->user();
+                                    $foto = $user->foto_profil
+                                        ? url(Storage::url('public/profil_guru_piket/' . $user->foto_profil))
+                                        : asset('asset/images/profie.jpg');
+                                } elseif (Auth::guard('gurus')->check()) {
+                                    $user = Auth::guard('gurus')->user();
+                                    $foto = $user->foto_profil
+                                        ? url(Storage::url('public/profil_guru/' . $user->foto_profil))
+                                        : asset('asset/images/profie.jpg');
+                                } elseif (Auth::guard('web')->check()) {
+                                    $user = Auth::guard('web')->user();
+                                    $foto = $user->foto_profil
+                                        ? url(Storage::url('public/profil_user/' . $user->foto_profil))
+                                        : asset('asset/images/profie.jpg');
+                                } else {
+                                    $foto = asset('asset/images/profie.jpg');
+                                }
+                            @endphp
+                            <img class="md:w-10 md:h-10 h-8 w-8 rounded-full object-cover" src="{{ $foto }}"
                                 alt="photo profile">
                         </button>
                     </div>
@@ -54,6 +89,10 @@
                             <p class="text-sm font-semibold text-gray-900 uppercase" role="none">
                                 @if (Auth::guard('wali')->check())
                                     {{ Auth::guard('wali')->user()->guru->nama_guru }}
+                                @elseif(Auth::guard('guru_piket')->check())
+                                    {{ Auth::guard('guru_piket')->user()->guru->nama_guru }}
+                                @elseif(Auth::guard('gurus')->check())
+                                    {{ Auth::guard('gurus')->user()->nama_guru }}
                                 @else
                                     {{ Auth::user()->name }}
                                 @endif
@@ -61,6 +100,10 @@
                             <p class="text-sm font-normal text-gray-700 truncate dark:text-gray-300" role="none">
                                 @if (Auth::guard('wali')->check())
                                     {{ Auth::guard('wali')->user()->guru->email }}
+                                @elseif(Auth::guard('guru_piket')->check())
+                                    {{ Auth::guard('guru_piket')->user()->guru->email }}
+                                @elseif(Auth::guard('gurus')->check())
+                                    {{ Auth::guard('gurus')->user()->email }}
                                 @else
                                     {{ Auth::user()->email }}
                                 @endif

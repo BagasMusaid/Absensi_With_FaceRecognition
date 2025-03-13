@@ -27,10 +27,11 @@ class StoreGuruRequest extends FormRequest
             'nama' => 'required|max:225',
             'nip' => 'required|numeric|digits_between:9,18|unique:gurus',
             'gender' => 'required',
+            'kepalasekolah' => 'required',
             'tlp' => 'required|numeric|digits_between:10,14',
             'alamat' => 'required|max:225',
             'email' => 'required|email|unique:gurus',
-            'password' => 'required|min:8|max:225|alpha_dash'
+            'password' => 'nullable|min:8|max:225|alpha_dash'
         ];
     }
     public function messages(): array
@@ -42,6 +43,7 @@ class StoreGuruRequest extends FormRequest
             'nip.digits_between' => 'NIP min 9 digit dan max 18 digit',
             'nip.unique' => 'NIP Sudah Ada',
             'gender.required' => 'Jenis Kelamin Wajib Diisi',
+            'kepalasekolah.required' => 'Kepala Sekolah Wajib Disi!',
             'tlp.required' => 'No Telp Wajib Diisi',
             'tlp.numeric' => 'No Telp Harus Angka',
             'tlp.digits_between' => 'No Telp min 10 digit dan max 14 digit',
@@ -49,7 +51,6 @@ class StoreGuruRequest extends FormRequest
             'email.required' => 'Email Wajib Diisi',
             'email.email' => 'Email Tidak Valid',
             'email.unique' => 'Email Sudah Ada',
-            'password.required' => 'Password Wajib Diisi',
             'password.min' => 'Password Minimal 8 Karakter',
             'password.alpha_dash' => 'Password Hanya Boleh Menggunakan Huruf Dan Angka'
         ];
@@ -60,6 +61,7 @@ class StoreGuruRequest extends FormRequest
             'nama' => 'nama_guru',
             'nip' => 'NIP',
             'gender' => 'jenis_kelamin',
+            'kepalasekolah' => 'kepalasekolah',
             'tlp' => 'no_telp',
             'alamat' => 'alamat',
             'email' => 'email',

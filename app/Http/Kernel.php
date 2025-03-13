@@ -14,6 +14,7 @@ class Kernel extends HttpKernel
         \Illuminate\Http\Middleware\TrustProxies::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
     ];
 
     /**
@@ -47,5 +48,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'checkPermission' => \App\Http\Middleware\CheckPermissions::class,
+        'isGuru' => \App\Http\Middleware\EnsureUserIsGuru::class,
     ];
 }

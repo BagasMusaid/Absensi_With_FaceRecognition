@@ -2,14 +2,19 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Symfony\Component\HttpFoundation\Response;
 
 class Authenticate extends Middleware
 {
-    protected function redirectTo($request)
+    /**
+     * Jika pengguna tidak terautentikasi, arahkan ke halaman abort 403.
+     */
+    protected function unauthenticated($request, array $guards)
     {
-        if (!$request->expectsJson()) {
-            return route('login');
-        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized access.');
     }
 }

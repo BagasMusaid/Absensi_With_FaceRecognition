@@ -17,7 +17,8 @@ class GuruPiket extends Authenticatable
         'guru_id',
         'kd_tahun_ajaran',
         'hari',
-        'password'
+        'password',
+        'foto_profil'
     ];
 
     public function getAuthPassword()

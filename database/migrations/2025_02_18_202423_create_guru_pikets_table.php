@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('guru_pikets', function (Blueprint $table) {
             $table->id();
-            $table->char('guru_id', 20)->nullable();
+            $table->char('guru_id', 20);
             $table->foreign('guru_id')->references('kd_guru')->on('gurus')->onDelete('cascade');
             $table->string('hari');
+            $table->string('foto_profil')->nullable();
             $table->foreignId('kd_tahun_ajaran')->nullable()->constrained('tahun_ajarans')->onDelete('cascade');
-            $table->string('password')->nullable();
+            $table->string('password');
             $table->timestamps();
         });
     }

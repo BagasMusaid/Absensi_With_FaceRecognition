@@ -39,7 +39,7 @@
                                     class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                             @enderror
                         </div>
-                        <div class="mb-4">
+                        <div class="">
                             <label for="gender" class="block text-gray-700 text-sm font-bold mb-2">
                                 Jenis Kelamin
                             </label>
@@ -92,7 +92,25 @@
                             <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                         @enderror
                     </div>
-                    <div class="relative">
+                    <div class="">
+                        <label for="kepalasekolah" class="block text-gray-700 text-sm font-bold mb-2">
+                            Kepala Sekolah
+                        </label>
+                        <select id="kepalasekolah" name="kepalasekolah"
+                            class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300  {{ $errors->has('kepalasekolah') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
+                            <option value="" disabled {{ old('kepalasekolah') ? '' : 'selected' }}>Apakah Kepala
+                                Sekolah
+                            </option>
+                            <option value="ya" {{ old('kepalasekolah') == 'ya' ? 'selected' : '' }}>Ya
+                            </option>
+                            <option value="tidak" {{ old('kepalasekolah') == 'ya' ? 'selected' : '' }}>
+                                Tidak</option>
+                        </select>
+                        @error('kepalasekolah')
+                            <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div id="password-container" class="relative hidden">
                         <label for="password"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                         <input type="password" name="password" id="password"

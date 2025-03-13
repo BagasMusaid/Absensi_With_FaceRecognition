@@ -25,6 +25,7 @@ class Guru extends Authenticatable
         'NIP',
         'nama_guru',
         'jenis_kelamin',
+        'kepalasekolah',
         'agama',
         'alamat',
         'no_telp',
