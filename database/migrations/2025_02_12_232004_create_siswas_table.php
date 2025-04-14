@@ -20,7 +20,6 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
             $table->string('agama');
             $table->string('alamat');
-            $table->json('wajah')->nullable();
             $table->timestamps();
         });
     }

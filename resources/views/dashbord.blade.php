@@ -41,11 +41,15 @@
                             untuk melakukan
                             presensi</h2>
                         <div class="ml-auto flex items-center">
-                            {{-- <a href="{{ route('DaftarPresensi') }}"
-                        class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
-                        Buat Pendaftaran Wajah
-                    </a> --}}
-                            <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
+                            {{-- <a href="{{ route('daftar-wajah.index') }}"
+                                class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
+                                Buat Pendaftaran Wajah
+                            </a> --}}
+                            {{-- <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
+                                class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
+                                Proses Presensi
+                            </a> --}}
+                            <a href="{{ Route('presensi.presensi-siswa') }}"
                                 class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
                                 Proses Presensi
                             </a>

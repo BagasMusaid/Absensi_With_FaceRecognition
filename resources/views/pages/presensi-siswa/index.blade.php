@@ -4,20 +4,18 @@
         <div class="p-4 bg-white dark:border-gray-700 mt-20">
             <div
                 class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4  dark:bg-gray-900">
-                @can('akses-admin')
-                    <div
-                        class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
-                        <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <line x1="12" x2="12" y1="5" y2="19" />
-                            <line x1="5" x2="19" y1="12" y2="12" />
-                        </svg>
-                        <a data-modal-target="tambah-siswa" data-modal-toggle="tambah-siswa"
-                            class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
-                            Siswa</a>
-                    </div>
-                @endcan
+                <div
+                    class="flex cursor-pointer bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
+                    <svg class="feather feather-plus ml-3 mt-0.5 w-5 text-white" fill="none" stroke="currentColor"
+                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" x2="12" y1="5" y2="19" />
+                        <line x1="5" x2="19" y1="12" y2="12" />
+                    </svg>
+                    <a data-modal-target="tambah-presensi" data-modal-toggle="tambah-presensi"
+                        class="text-white  text-sm pl-1.5 pr-3 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah
+                        Presensi Khusus</a>
+                </div>
                 <form>
                     <label for="search" class="sr-only">Search</label>
                     <div class="flex">
@@ -42,65 +40,59 @@
                         <th scope="col" class="px-3 py-3">
                             No
                         </th>
-                        <th scope="col" class="px-7 py-3 text-center">
+                        <th scope="col" class="px-8 py-3 text-center">
                             Nama Siswa
                         </th>
-                        <th scope="col" class="px-3 py-3 text-center">
-                            kelas
-                        </th>
-                        <th scope="col" class="px-5 py-3 text-center">
+                        <th scope="col" class="px-6 py-3 text-center">
                             NIS
                         </th>
                         <th scope="col" class="px-6 py-3 text-center">
-                            Jenis Kelamin
+                            Kelas
                         </th>
-                        <th scope="col" class="px-4 py-3 text-center">
-                            Agama
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Tanggal
                         </th>
-                        @can('akses-wali')
-                            <th scope="col" class="px-4 py-3 text-center">
-                                Wajah
-                            </th>
-                        @endcan
-                        @can('akses-admin')
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Action
-                            </th>
-                        @endcan
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Waktu
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            Action
+                        </th>
                     </tr>
                 </thead>
-                <tbody id="siswa-list">
-                    @foreach ($datas as $item)
+                <tbody id="presensi-list">
+                    @foreach ($presensi as $p)
                         <tr
                             class= "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-4 py-3">{{ $loop->iteration + ($datas->currentPage() - 1) * $datas->perPage() }}
+                            <td class="px-4 py-3">
+                                {{ $loop->iteration + ($presensi->currentPage() - 1) * $presensi->perPage() }}
                             </td>
-                            <td class="px-7 py-3 text-center text-sm font-semibold capitalize">{{ $item->nama_siswa }}</td>
-                            <td class="px-3 py-3 text-center">{{ $item->kelas->nama_kelas }}</td>
-                            <td class="px-5 py-3 text-center">{{ $item->NIS }}</td>
-                            <td class="px-6 py-3 text-center">{{ $item->jenis_kelamin }}</td>
-                            <td class="px-4 py-3 text-center">{{ $item->agama }}</td>
+                            <td class="px-8 py-3 text-sm font-semibold capitalize text-center">{{ $p->siswa->nama_siswa }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">{{ $p->siswa->NIS }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $p->siswa->kelas->nama_kelas }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $p->tanggal }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ \Carbon\Carbon::parse($p->waktu_presensi)->format('H:i') }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                {{ $p->status }}
+                            </td>
                             @can('akses-wali')
-                                <td class="px-4 py-3 text-center">
-                                    <a href="{{ route('daftar-wajah.index', ['id' => $item->kd_siswa]) }}"
-                                        class="bg-purple-600 text-white py-1 px-2 font-medium rounded-md text-sm 
-                                               {{ $item->wajah()->exists() ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                        {{ $item->wajah()->exists() ? 'aria-disabled=true tabindex=-1' : '' }}>
-                                        Buat Data Face
-                                    </a>
-                                    <p class="text-xs mt-0.5 {{ $item->wajah()->exists() ? 'text-green-600' : 'font-normal' }}">
-                                        {{ $item->wajah()->exists() ? 'Tersedia' : 'Belum Tersedia' }}
-                                    </p>
-                                </td>
-                            @endcan
-                            @can('akses-admin')
                                 <td class="px-6 py-3 flex items-center justify-center">
                                     <!-- Modal toggle -->
                                     <div>
-                                        <a type="button" id="edit-btn" data-modal- target="edit-siswa-{{ $item->kd_siswa }}"
-                                            data-modal-show="edit-siswa-{{ $item->kd_siswa }}"
-                                            data-tooltip-target="tooltip-edit-{{ $loop->iteration }}"
-                                            data-id="{{ $item->kd_siswa }}">
+                                        <a type="button" id="edit-btn" data-modal-target="edit-presensi-{{ $p->id }}"
+                                            data-modal-show="edit-presensi-{{ $p->id }}"
+                                            data-tooltip-target="tooltip-edit-{{ $loop->iteration }}" id="edit-btn">
                                             <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512"
                                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                 <title />
@@ -119,9 +111,9 @@
                                             Edit
                                             <div class="tooltip-arrow" data-popper-arrow></div>
                                         </div>
-                                        @include('pages.siswa.edit', ['item' => $item])
+                                        @include('pages.presensi-siswa.edit', ['p' => $p])
                                     </div>
-                                    <form action="{{ route('siswa.destroy', ['siswa' => $item->kd_siswa]) }}" method="POST"
+                                    <form action="{{ route('presensi-siswa.destroy', $p->id) }}" method="POST"
                                         class="delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -152,49 +144,80 @@
             </table>
         </div>
         <div class="mt-3">
-            {{ $datas->links() }}
+            {{ $presensi->links() }}
         </div>
     </div>
-    @include('pages.siswa.create')
+    @include('pages.presensi-siswa.create')
 @endsection
 @push('scripts')
     <script>
-        let delayTimer;
-        $("#search").on("input", function() {
-            clearTimeout(delayTimer);
-            let search = $(this).val().trim();
+        document.addEventListener('DOMContentLoaded', function() {
+            // ==================== SEARCH MAPEL (DEBOUNCED AJAX) ====================
+            let delayTimer;
+            $("#search").on("input", function() {
+                clearTimeout(delayTimer);
+                let search = $(this).val().trim();
 
-            delayTimer = setTimeout(() => {
-                $.ajax({
-                    url: "{{ route('siswa.index') }}",
-                    type: "GET",
-                    data: {
-                        search: search
-                    },
-                    beforeSend: function() {
-                        $("#loading").show();
-                    },
-                    success: function(data) {
-                        $("#siswa-list").html($(data).find("#siswa-list")
-                            .html());
-                        attachDeleteEvent
-                            (); // Pasang ulang event setelah update AJAX
-                        $(document).on("click", "#edit-btn", function() {
-                            let modalId = $(this).data("modal-target");
-                            $("#" + modalId).removeClass("hidden").addClass(
-                                "flex backdrop-blur-sm bg-opacity-60 drop-shadow-sm bg-gray-300"
-                            );
+                delayTimer = setTimeout(() => {
+                    $.ajax({
+                        url: "{{ route('presensi-siswa.index') }}",
+                        type: "GET",
+                        data: {
+                            search: search
+                        },
+                        beforeSend: function() {
+                            $("#loading").show();
+                        },
+                        success: function(data) {
+                            $("#presensi-list").html($(data).find("#presensi-list")
+                                .html());
+                            attachDeleteEvent(); // Re-bind delete button event
+
+                            // Re-bind modal open buttons
+                            $(document).on("click", "#edit-btn", function() {
+                                let modalId = $(this).data("modal-target");
+                                $("#" + modalId).removeClass("hidden").addClass(
+                                    "flex backdrop-blur-sm bg-opacity-60 drop-shadow-sm bg-gray-50"
+                                );
+                            });
+
+                            // Re-bind modal close buttons
+                            $(document).on("click", "[data-modal-hide]", function() {
+                                let modalId = $(this).data("modal-hide");
+                                $("#" + modalId).addClass("hidden");
+                            });
+                        },
+                        complete: function() {
+                            $("#loading").hide();
+                        }
+                    });
+                }, 300); // Delay for debounce
+            });
+
+            // ==================== LOAD SISWA BERDASARKAN KELAS ====================
+            const kelasDropdown = document.getElementById('kd_kelas');
+            if (kelasDropdown) {
+                kelasDropdown.addEventListener('change', function() {
+                    let kelasId = this.value;
+                    let siswaSelect = document.getElementById('nis_siswa');
+
+                    siswaSelect.innerHTML = '<option value="">Memuat...</option>';
+
+                    fetch(`/get-siswa-by-kelas/${kelasId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            siswaSelect.innerHTML = '<option value="">Pilih Siswa</option>';
+                            data.forEach(siswa => {
+                                siswaSelect.innerHTML +=
+                                    `<option value="${siswa.NIS}">${siswa.nama_siswa}</option>`;
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Gagal mengambil data siswa:', error);
+                            siswaSelect.innerHTML = '<option value="">Gagal memuat siswa</option>';
                         });
-                        $(document).on("click", "[data-modal-hide]", function() {
-                            let modalId = $(this).data("modal-hide");
-                            $("#" + modalId).addClass("hidden");
-                        });
-                    },
-                    complete: function() {
-                        $("#loading").hide();
-                    }
                 });
-            }, 300);
+            }
         });
     </script>
 @endpush

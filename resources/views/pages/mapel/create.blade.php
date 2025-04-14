@@ -25,8 +25,7 @@
                             Mapel </label>
                         <input type="text" name="nama_mapel" id="nama_mapel"
                             class="bg-gray-50 border {{ $errors->has('nama_mapel') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="Masukan Nama Mapel" value="{{ old('nama_mapel') }}"
-                            value="{{ old('nama_mapel') }}" autocomplete="off">
+                            placeholder="Masukan Nama Mapel" value="{{ old('nama_mapel') }}" autocomplete="off">
                         @error('nama_mapel')
                             <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                         @enderror

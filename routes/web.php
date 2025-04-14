@@ -14,7 +14,10 @@ use App\Http\Controllers\master_data\KelasController;
 use App\Http\Controllers\master_data\MapelController;
 use App\Http\Controllers\master_data\TahunAjaranController;
 use App\Http\Controllers\master_data\WalikelasController;
+use App\Http\Controllers\pengenalan\DaftarPresensiController;
 use App\Http\Controllers\presensi\GuruController;
+use App\Http\Controllers\presensi\PresensiController;
+use App\Http\Controllers\presensi\PresensiSiswaController;
 use App\Http\Controllers\presensi\SiswaController;
 use App\Http\Middleware\EnsureUserHasAccess;
 use App\Http\Middleware\EnsureUserIsGuru;
@@ -82,12 +85,17 @@ Route::middleware(['auth:web,wali,guru_piket,gurus', 'verified'])->group(functio
     Route::resource('kelas', KelasController::class);
     Route::resource('guru-piket', GuruPiketController::class);
     Route::resource('tahun-ajaran', TahunAjaranController::class);
-    Route::get('DaftarPresensi', function () {
-        return view('pages.presensi.index');
-    })->name('DaftarPresensi');
-    Route::get('PresensiSiswa', function () {
-        return view('pages.presensi.index');
-    })->name('PresensiSiswa');
+    Route::prefix('daftar-wajah')->name('daftar-wajah.')->controller(DaftarPresensiController::class)->group(function () {
+        Route::get('/json', 'dataWajah')->name('data-wajah');
+        Route::get('/{id}', 'index')->name('index');
+        Route::post('/simpan-wajah', 'store')->name('simpan-wajah');
+    });
+    Route::prefix('presensi')->name('presensi.')->controller(PresensiController::class)->group(function () {
+        Route::get('/', 'index')->name('presensi-siswa');
+        Route::post('/proses', 'store')->name('simpan-presensi');
+    });
+    Route::resource('presensi-siswa', PresensiSiswaController::class);
+    Route::get('/get-siswa-by-kelas/{kelasId}', [PresensiSiswaController::class, 'getSiswaByKelas']);
     Route::resource('walikelas', WalikelasController::class);
     Route::prefix('akun')->name('akun.')->controller(AkunController::class)->group(function () {
         Route::get('/', 'index');
