@@ -16,7 +16,10 @@ class EnsureUserIsGuru
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('gurus')->check()) {
+        $user = auth()->guard('gurus')->user();
+
+        // Pastikan user terautentikasi dan memiliki properti 'kepalasekolah' atau kondisi lainnya
+        if ($user && $user->kepalasekolah == 'ya' && $user->email_verified_at) {
             return $next($request);
         }
 

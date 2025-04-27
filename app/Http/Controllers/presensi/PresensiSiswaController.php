@@ -127,4 +127,12 @@ class PresensiSiswaController extends Controller
         $siswa = Siswa::where('kelas_id', $kelasId)->get(['NIS', 'nama_siswa']);
         return response()->json($siswa);
     }
+    public function filterByKelas($kelasId)
+    {
+        $presensi = Presensi::whereHas('siswa', function ($query) use ($kelasId) {
+            $query->where('kelas_id', $kelasId);
+        })->with('siswa.kelas')->paginate(5);
+
+        return view('pages.presensi-siswa.filtered-kelas', compact('presensi'))->render();
+    }
 }

@@ -14,7 +14,7 @@ window.addEventListener("load", async () => {
         .getUserMedia({ video: {} })
         .then((stream) => {
             video.srcObject = stream;
-            video.onloadedmetadata = async () => {
+            video.onloadedmetadata = () => {
                 video.play();
 
                 const displaySize = {
@@ -23,13 +23,6 @@ window.addEventListener("load", async () => {
                 };
 
                 faceapi.matchDimensions(canvas, displaySize);
-
-                // Load embeddings
-                const labeledDescriptors = await loadLabeledImages();
-                const faceMatcher = new faceapi.FaceMatcher(
-                    labeledDescriptors,
-                    0.6
-                );
 
                 // Inisialisasi flag presensi
                 window.presensiDicatat = {};
@@ -48,95 +41,149 @@ window.addEventListener("load", async () => {
                         displaySize
                     );
 
+                    // Jika tidak ada deteksi wajah, lewati loop
+                    if (resizedDetections.length === 0) {
+                        console.log("Tidak ada wajah yang terdeteksi");
+                        canvas
+                            .getContext("2d")
+                            .clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+                        return;
+                    }
+
+                    // Bersihkan canvas sebelum menggambar
                     canvas
                         .getContext("2d")
                         .clearRect(0, 0, canvas.width, canvas.height);
 
-                    const results = resizedDetections.map((d) =>
-                        faceMatcher.findBestMatch(d.descriptor)
+                    // Ambil gambar dari video sebagai base64
+                    function getBase64ImageFromVideo(video) {
+                        const tempCanvas = document.createElement("canvas");
+                        tempCanvas.width = video.videoWidth;
+                        tempCanvas.height = video.videoHeight;
+                        const ctx = tempCanvas.getContext("2d");
+                        ctx.drawImage(
+                            video,
+                            0,
+                            0,
+                            tempCanvas.width,
+                            tempCanvas.height
+                        );
+                        return tempCanvas.toDataURL("image/jpeg"); // hasil base64
+                    }
+
+                    const base64Image = getBase64ImageFromVideo(video);
+
+                    const response = await fetch(
+                        "http://127.0.0.1:5000/predict",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                image: base64Image, // kirim field "image"
+                            }),
+                        }
                     );
 
-                    results.forEach(async (result, i) => {
-                        const label = result.label;
+                    const result = await response.json(); // hasil dari Flask backend
+                    // Bungkus menjadi array jika bukan array
+                    const results = Array.isArray(result) ? result : [result];
 
-                        const box = resizedDetections[i].detection.box;
-                        const drawBox = new faceapi.draw.DrawBox(box, {
-                            label,
-                        });
-                        drawBox.draw(canvas);
+                    // Sekarang gunakan hasilPrediksi untuk dicek panjangnya
+                    if (results.length === resizedDetections.length) {
+                        results.forEach(async (prediction, i) => {
+                            const label = prediction.label;
+                            const confidence = prediction.confidence;
+                            const box = resizedDetections[i].detection.box;
 
-                        if (
-                            label !== "unknown" &&
-                            !window.presensiDicatat[label]
-                        ) {
-                            const nis_siswa = label.match(/\((.*?)\)/)[1]; // Ambil NIS dari label
-                            const now = new Date();
-                            const tanggal = now.toISOString().slice(0, 10); // yyyy-mm-dd
-                            const waktu_presensi = now
-                                .toTimeString()
-                                .slice(0, 8); // hh:mm:ss
-
-                            // Simpan presensi
-                            const res = await fetch("/presensi/proses", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": document
-                                        .querySelector(
-                                            'meta[name="csrf-token"]'
-                                        )
-                                        .getAttribute("content"),
-                                },
-                                body: JSON.stringify({
-                                    nis_siswa,
-                                    tanggal,
-                                    waktu_presensi,
-                                    status: "Hadir",
-                                }),
+                            // Gambar kotak deteksi
+                            const drawBox = new faceapi.draw.DrawBox(box, {
+                                label: `${label} (${(confidence * 100).toFixed(
+                                    2
+                                )}%)`, // tampilkan confidence
                             });
+                            drawBox.draw(canvas);
 
-                            if (res.ok) {
-                                console.log("Presensi berhasil dicatat");
-                                window.presensiDicatat[label] = true;
+                            // Tambahkan validasi confidence di sini
+                            if (confidence < 0.85 || label === "unknown") {
+                                console.log(
+                                    "Wajah tidak dikenali atau confidence rendah:",
+                                    confidence
+                                );
+                                return;
+                            }
 
-                                // Tampilkan ke UI
-                                document.getElementById(
-                                    "namaPresensi"
-                                ).innerText = label;
-                                document
-                                    .getElementById("hasilPresensi")
-                                    .classList.remove("hidden");
-                                setTimeout(() => {
+                            if (
+                                label !== "unknown" &&
+                                !window.presensiDicatat[label]
+                            ) {
+                                const nisMatch = label.match(/\((.*?)\)/);
+                                if (!nisMatch || !nisMatch[1]) {
+                                    console.warn(
+                                        "Label tidak sesuai format: ",
+                                        label
+                                    );
+                                    return;
+                                }
+
+                                const nis_siswa = nisMatch[1];
+                                const now = new Date();
+                                const tanggal = now.toISOString().slice(0, 10);
+                                const waktu_presensi = now
+                                    .toTimeString()
+                                    .slice(0, 8);
+
+                                const res = await fetch("/presensi/proses", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-CSRF-TOKEN": document
+                                            .querySelector(
+                                                'meta[name="csrf-token"]'
+                                            )
+                                            .getAttribute("content"),
+                                    },
+                                    body: JSON.stringify({
+                                        nis_siswa,
+                                        tanggal,
+                                        waktu_presensi,
+                                        status: "Hadir",
+                                    }),
+                                });
+
+                                if (res.ok) {
+                                    console.log("Presensi berhasil dicatat");
+                                    window.presensiDicatat[label] = true;
+
+                                    document.getElementById(
+                                        "namaPresensi"
+                                    ).innerText = label;
                                     document
                                         .getElementById("hasilPresensi")
-                                        .classList.add("hidden");
-                                }, 5000);
-                            } else {
-                                console.error("Gagal mencatat presensi");
+                                        .classList.remove("hidden");
+
+                                    setTimeout(() => {
+                                        document
+                                            .getElementById("hasilPresensi")
+                                            .classList.add("hidden");
+                                    }, 5000);
+                                } else {
+                                    console.error("Gagal mencatat presensi");
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        console.error(
+                            "Mismatch antara jumlah hasil deteksi dan hasil prediksi:",
+                            {
+                                hasilFlask: result,
+                                hasilDeteksi: resizedDetections,
+                            }
+                        );
+                    }
                 }, 1500);
             };
         })
         .catch((err) => console.error("Error accessing webcam:", err));
-
-    // Fungsi load data embedding
-    async function loadLabeledImages() {
-        const response = await fetch("/daftar-wajah/json");
-        const data = await response.json();
-        const labelMap = {};
-        data.forEach((item) => {
-            const label = `${item.nama_siswa} (${item.NIS_Siswa})`;
-            if (!labelMap[label]) {
-                labelMap[label] = [];
-            }
-            labelMap[label].push(new Float32Array(item.embedding));
-        });
-
-        return Object.entries(labelMap).map(
-            ([label, descriptors]) =>
-                new faceapi.LabeledFaceDescriptors(label, descriptors)
-        );
-    }
 });

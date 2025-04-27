@@ -71,7 +71,7 @@
                 {{-- end presensi --}}
                 <div class="grid grid-cols-4 gap-4 mb-4">
                     <div
-                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800">
+                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm border-slate-200 border dark:bg-gray-800">
                         <div class="hidden md:block">
                             <svg class="flex-shrink-0 w-10 text-red-500 h-10 transition duration-75" fill="currentColor"
                                 viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -85,13 +85,15 @@
                             <h2 class="text-[10px] px-1 text-center md:text-start md:text-lg font-bold text-gray-700">
                                 Presensi Hari
                                 Ini</h2>
-                            <h2 class="text-center md:text-end font-semibold text-lg text-red-500">0</h2>
-                            <p class="text-[8px] px-1 md:text-sm text-gray-300 text-center md:text-end">Dari Total 0 Siswa
+                            <h2 class="text-center md:text-end font-semibold text-lg text-red-500">{{ $PresensiHariIni }}
+                            </h2>
+                            <p class="text-[8px] px-1 md:text-sm text-gray-300 text-center md:text-end">Dari Total
+                                <span>{{ $siswas }}</span> Siswa
                             </p>
                         </div>
                     </div>
                     <div
-                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800">
+                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800 border-slate-200 border">
                         <div class="hidden md:block">
                             <svg class="flex-shrink-0 w-10 text-yellow-300 h-10 transition duration-75" fill="currentColor"
                                 viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +122,7 @@
                         </div>
                     </div>
                     <div
-                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800">
+                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800 border-slate-200 border">
                         <div class="hidden md:block">
                             <svg class="flex-shrink-0 w-10 text-emerald-300 h-10 transition duration-75" fill="currentColor"
                                 viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +145,7 @@
                         </div>
                     </div>
                     <div
-                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800">
+                        class="flex items-center justify-center md:justify-between md:p-4 md:px-6 h-24 rounded bg-white shadow-sm dark:bg-gray-800 border-slate-200 border">
                         <div class="hidden md:block">
                             <svg class="flex-shrink-0 w-10 text-purple-400 h-10 transition duration-75" fill="currentColor"
                                 viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -173,7 +175,7 @@
                             </h2>
                             <div class="p-4 mt-5 md:mt-10">
                                 <h2 class="font-semibold">Jumlah Mata Pelajaran</h2>
-                                <h3 class="font-bold text-lg">0</h3>
+                                <h3 class="font-bold text-lg">{{ $Mapels }}</h3>
                             </div>
                             <div class="p-4 mt-5 md:mt-8">
                                 <h2 class="font-semibold">Tahun Ajaran</h2>

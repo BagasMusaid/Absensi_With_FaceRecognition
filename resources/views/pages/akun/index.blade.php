@@ -5,10 +5,35 @@
             <h3 class="font-semibold text-lg md:text-xl">Account Details</h3>
         </div>
         <div class="p-4 bg-white dark:border-gray-700 mt-5 ">
-            <div class="flex items-start mx-5 md:mx-10 border-b border-purple-300">
-                <a href="{{ url('akun') }}"
-                    class="border py-2 px-6 @if (request()->is('akun')) bg-purple-700 text-white @endif">Profile</a>
-                <a href="" class="border py-2 px-4">Password</a>
+            <div
+                class="inline-flex items-start mx-5 md:mx-10 gap-2 
+             bg-gray-300 rounded-md p-1.5 border-purple-300">
+                <div class="flex bg-purple-700 text-white items-center justify-center px-4 gap-2 rounded-md">
+                    <svg viewBox="0 0 576 512" class="w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z" />
+                    </svg>
+                    <a href="{{ url('akun') }}"
+                        class="py-2 font-semibold {{ request()->is('akun') ? 'text-white' : 'text-gray-700' }}">
+                        Profile
+                    </a>
+                </div>
+                <div class="flex  text-gray-700 items-center justify-center px-4 gap-2 rounded-md">
+                    <svg style="enable-background:new 0 0 24 24;" class="w-5" fill="currentColor" version="1.1"
+                        viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="info" />
+                        <g id="icons">
+                            <path
+                                d="M20,10h-4H8l0-2.8c0-2.1,1.5-4,3.6-4.2C14,2.8,16,4.7,16,7l0,0c0,0.6,0.4,1,1,1h1c0.6,0,1-0.4,1-1l0,0   c0-3.8-3-6.9-6.8-7C8.3-0.1,5,3.1,5,7v3H4c-1.1,0-2,0.9-2,2v7c0,2.8,2.2,5,5,5h10c2.8,0,5-2.2,5-5v-7C22,10.9,21.1,10,20,10z    M13,17.7V19c0,0.5-0.5,1-1,1s-1-0.5-1-1v-1.3c-0.6-0.3-1-1-1-1.7c0-1.1,0.9-2,2-2s2,0.9,2,2C14,16.7,13.6,17.4,13,17.7z"
+                                id="password" />
+                        </g>
+                    </svg>
+                    <a href=""
+                        class="py-2 font-semibold {{ request()->is('password') ? 'text-white' : 'text-gray-700' }}">
+                        Password
+                    </a>
+                </div>
             </div>
             <div class="md:flex mx-5 items-center justify-between ">
                 <div class="p-5 mt-10">
@@ -49,8 +74,9 @@
                                 <svg class="feather feather-camera w-7 h-7 text-white" fill="none" stroke="currentColor"
                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d=" M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0
-                                                                                1 2 2z" />
+                                    <path
+                                        d=" M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0
+                                                                                                                                                                                                                                                                                                                        1 2 2z" />
                                     <circle cx="12" cy="13" r="4" />
                                 </svg>
                             </a>

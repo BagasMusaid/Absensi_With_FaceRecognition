@@ -8,6 +8,9 @@ use App\Models\presensi\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\master_data\Mapel;
+use App\Models\presensi\presensi;
+use Carbon\Carbon;
 
 class DashbordController extends Controller
 {
@@ -39,7 +42,9 @@ class DashbordController extends Controller
         $kelas = kelas::count();
         $gurus = Guru::count();
         $siswas = Siswa::count();
+        $PresensiHariIni = presensi::whereDate('tanggal', Carbon::today())->count();
+        $Mapels = Mapel::count();
 
-        return view('dashbord', compact('kelas', 'gurus', 'siswas', 'greeting'));
+        return view('dashbord', compact('kelas', 'gurus', 'siswas', 'greeting', 'PresensiHariIni', 'Mapels'));
     }
 }

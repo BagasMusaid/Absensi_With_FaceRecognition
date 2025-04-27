@@ -13,9 +13,9 @@
                 {{-- <a href="{{ route('daftar-wajah.index') }}"
                     class="bg-blue-600 py-2 px-8 rounded-md font-semibold text-white text-sm md:text-lg {{ Route::is('daftar-wajah.index') ? 'opacity-60 cursor-not-allowed' : '' }}">Pendaftaran
                     Wajah</a> --}}
-                <a href="{{ route('PresensiSiswa') }}"
+                {{-- <a href="{{ route('PresensiSiswa') }}"
                     class="bg-blue-600 py-2 px-10 rounded-md font-semibold text-white text-sm md:text-lg {{ Route::is('PresensiSiswa') ? 'opacity-60 cursor-not-allowed' : '' }}">Presensi
-                    Wajah</a>
+                    Wajah</a> --}}
             </div>
             <div class="-mb-3 -mt-7 ">
                 <img src="{{ asset('asset/images/wajah_tidak_diketahui.png') }}" alt="tidak_ditemukan"
@@ -28,7 +28,7 @@
                     value="{{ $siswa->NIS }}-{{ $siswa->nama_siswa }}" readonly>
             </div>
             <div class="flex justify-between mx-10 mt-3">
-                <h1 class="font-semibold text-gray-800 ">Jumlah Pengujian : <span id="jumlah-pengujian">3</span></h1>
+                <h1 class="font-semibold text-gray-800 ">Jumlah Pengujian : <span id="jumlah-pengujian">10</span></h1>
                 <button onclick="registerFace()"
                     class="bg-blue-600 py-2 px-8 rounded-md font-semibold text-white text-sm md:text-lg">Simpan
                     Wajah</button>
@@ -39,5 +39,6 @@
 @endsection
 @push('scripts')
     <script src="{{ asset('cam_js/js/face-api.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="{{ asset('cam_js/js/pendaftaran.js') }}"></script>
 @endpush

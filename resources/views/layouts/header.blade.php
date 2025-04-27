@@ -35,7 +35,7 @@
                                     kepala sekolah
                                 @endif
                             </span>
-                            <P class="text-[11px]  text-end">
+                            <P class="text-[11px] mt-2 hidden md:block md:mt-0 text-end">
                                 @if (Auth::guard('wali')->check())
                                     {{ Auth::guard('wali')->user()->guru->nama_guru }}
                                 @elseif(Auth::guard('web')->check())
@@ -82,6 +82,7 @@
                             <img class="md:w-10 md:h-10 h-8 w-8 rounded-full object-cover" src="{{ $foto }}"
                                 alt="photo profile">
                         </button>
+
                     </div>
                     <div class="z-50 hidden my-4 text-base list-none bg-white border divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                         id="dropdown-user">

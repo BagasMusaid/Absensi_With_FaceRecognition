@@ -47,8 +47,7 @@ class AuthServiceProvider extends ServiceProvider
                 || auth()->guard('guru_piket')->check();
         });
         Gate::define('akses-guru', function ($user) {
-            return auth()->guard('gurus')->check() && $user?->kepalasekolah == 'ya'
-                || (auth()->guard('web')->check() || auth()->guard('wali')->check());
+            return (auth()->guard('web')->check() || auth()->guard('wali')->check()) || auth()->guard('gurus')->check() && $user?->kepalasekolah == 'ya';
         });
         Gate::define('akses-jadwal_mapel', function ($user) {
             return auth()->guard('gurus')->check() && $user?->kepalasekolah == 'ya'
@@ -65,7 +64,7 @@ class AuthServiceProvider extends ServiceProvider
                 || auth()->guard('wali')->check();
         });
         Gate::define('akses-laporan', function ($user) {
-            return auth()->guard('gurus')->check()
+            return (auth()->guard('gurus')->check() && $user->kepalasekolah == 'ya')
                 || auth()->guard('wali')->check();
         });
         Gate::define('akses-presensi', function ($user) {

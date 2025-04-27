@@ -23,7 +23,14 @@ Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri("/cam_js/models"),
     faceapi.nets.faceRecognitionNet.loadFromUri("/cam_js/models"),
     faceapi.nets.faceExpressionNet.loadFromUri("/cam_js/models"),
-]).then(startSteam);
+])
+    .then(() => {
+        console.log("Semua model berhasil dimuat.");
+        startSteam();
+    })
+    .catch((err) => {
+        console.error("Gagal memuat model:", err);
+    });
 
 // Fungsi deteksi realtime
 async function detec() {
@@ -50,12 +57,12 @@ async function registerFace() {
     const NIS = document.getElementById("NIS").value;
 
     alert(
-        "Registrasi akan mengambil 3 sudut wajah. Pastikan wajah jelas di kamera."
+        "Registrasi akan mengambil 10 sudut wajah. Pastikan wajah jelas di kamera."
     );
 
     let collectedEmbeddings = [];
     let collectedImages = [];
-    const jumlahPengujian = 3;
+    const jumlahPengujian = 10;
 
     for (let i = 0; i < jumlahPengujian; i++) {
         document.getElementById("jumlah-pengujian").innerText = i + 1;
@@ -126,14 +133,59 @@ async function registerFace() {
             }),
         });
 
-        const data = await response.json();
-        Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: data.message,
-        }).then(() => {
-            window.location.href = data.redirect;
-        });
+        if (response.ok) {
+            const data = await response.json();
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: data.message,
+            }).then(async () => {
+                // Tampilkan loading saat mulai training
+                document.getElementById("loading").style.display = "block";
+
+                try {
+                    const trainResponse = await fetch(
+                        "/daftar-wajah/train-model"
+                    );
+
+                    if (!trainResponse.ok) {
+                        throw new Error("Training gagal");
+                    }
+
+                    const trainData = await trainResponse.json();
+                    console.log("Training berhasil:", trainData.message);
+
+                    // Sembunyikan loading
+                    document.getElementById("loading").style.display = "none";
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Berhasil Training",
+                        text: "Berhasil Melakukan Training Wajah",
+                    }).then(() => {
+                        window.location.href = data.redirect;
+                    });
+                } catch (err) {
+                    console.error("Gagal training model:", err);
+
+                    document.getElementById("loading").style.display = "none";
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal Training!",
+                        text: "Model gagal dilatih. Tapi wajah tetap tersimpan.",
+                    }).then(() => {
+                        window.location.href = data.redirect;
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Gagal menyimpan!",
+                text: "Terjadi kesalahan saat menyimpan wajah.",
+            });
+        }
     } catch (error) {
         console.error("Gagal menyimpan wajah:", error);
         alert("Terjadi kesalahan saat menyimpan wajah. Lihat console.");

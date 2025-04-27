@@ -14,6 +14,7 @@
 <body id="body" class="scroll-smooth bg-slate-200">
 
     @yield('content')
+    @include('components.loading')
     @include('sweetalert::alert')
     @vite('resources/js/app.js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

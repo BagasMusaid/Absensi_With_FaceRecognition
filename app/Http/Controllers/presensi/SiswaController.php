@@ -133,4 +133,10 @@ class SiswaController extends Controller
         }
         return redirect()->route('siswa.index');
     }
+    public function filterByKelas($kelasId)
+    {
+        $siswa = Siswa::with('kelas')->where('kelas_id', $kelasId)->paginate(5);
+
+        return view('pages.siswa.filtered-kelas', compact('siswa'))->render();
+    }
 }

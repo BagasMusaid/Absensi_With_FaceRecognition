@@ -88,7 +88,8 @@
 
                     <li>
                         <a href="{{ url('jadwal-kelas') }}"
-                            class="flex items-center w-full {{ active_class(['jadwal-kelas*']) }} p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group  dark:text-white dark:hover:bg-gray-700">Data
+                            class="flex
+                             items-center w-full {{ active_class(['jadwal-kelas*']) }} p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group  dark:text-white dark:hover:bg-gray-700">Data
                             Jadwal</a>
                     </li>
                     @can('akses-admin')
@@ -125,13 +126,17 @@
 
                 </ul>
             </li>
+
+
+
             @can('akses-laporan')
+
                 <li>
                     <button type="button" id="Report"
-                        class="flex items-center w-full {{ active_class(['laporan-guru', 'laporan-siswa']) }} p-2 text-base text-gray-900 transition duration-75 rounded-lg group  dark:text-white dark:hover:bg-gray-700"
+                        class="flex items-center w-full {{ active_class(['laporan-guru', 'laporan-siswa', 'laporan-presensi', 'laporan-presensi', 'laporan-mata-pelajaran']) }} p-2 text-base text-gray-900 transition duration-75 rounded-lg group  dark:text-white dark:hover:bg-gray-700"
                         aria-controls="dropdown-laporan" data-collapse-toggle="dropdown-laporan"
-                        aria-expanded="{{ request()->is(['laporan-guru', 'laporan-siswa']) ? 'true' : 'false' }}">
-                        <svg class="flex-shrink-0 {{ active_class(['laporan-guru', 'laporan-siswa']) }} w-6 h-6 text-gray-500 transition duration-75 "
+                        aria-expanded="{{ request()->is(['laporan-guru', 'laporan-siswa', 'laporan-presensi', 'laporan-mata-pelajaran']) ? 'true' : 'false' }}">
+                        <svg class="flex-shrink-0 {{ active_class(['laporan-guru', 'laporan-siswa', 'laporan-presensi', 'laporan-mata-pelajaran']) }} w-6 h-6 text-gray-500 transition duration-75 "
                             viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <title />
                             <path
@@ -140,18 +145,18 @@
                         </svg>
                         <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">laporan</span>
                         <svg id="laporan-icon"
-                            class="feather feather-chevron-left w-5 h-5 transition-transform duration-300 {{ is_active_route(['laporan-guru', 'laporan-siswa']) ? '-rotate-90' : 'rotate-0' }}"
+                            class="feather feather-chevron-left w-5 h-5 transition-transform duration-300 {{ is_active_route(['laporan-guru', 'laporan-siswa', 'laporan-presensi', 'laporan-mata-pelajaran']) ? '-rotate-90' : 'rotate-0' }}"
                             fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <polyline points="15 18 9 12 15 6" />
                         </svg>
                     </button>
                     <ul id="dropdown-laporan"
-                        class="hidden py-2 space-y-2 {{ show_class(['laporan-guru', 'laporan-siswa']) }}">
+                        class="hidden py-2 space-y-2 {{ show_class(['laporan-guru', 'laporan-siswa', 'laporan-mata-pelajaran', 'laporan-presensi']) }}">
                         @can('akses-kepala_sekolah')
                             <li>
-                                <a href="#"
-                                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group  dark:text-white dark:hover:bg-gray-700">Data
+                                <a href="{{ url('laporan-presensi') }}"
+                                    class="flex items-center {{ active_class(['laporan-presensi']) }} w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group  dark:text-white dark:hover:bg-gray-700">Data
                                     Presensi</a>
                             </li>
                             <li>
@@ -160,8 +165,8 @@
                                     Guru</a>
                             </li>
                             <li>
-                                <a href="#"
-                                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group  dark:text-white dark:hover:bg-gray-700">Data
+                                <a href="{{ url('laporan-mata-pelajaran') }}"
+                                    class="flex items-center w-full {{ active_class(['laporan-mata-pelajaran']) }} p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group  dark:text-white dark:hover:bg-gray-700">Data
                                     Mapel</a>
                             </li>
                         @endcan
@@ -213,18 +218,23 @@
             // 🔹 Fungsi untuk memperbarui visibilitas dropdown Laporan
             function updateDropdownReports() {
                 const isActiveReport = window.location.pathname.includes('laporan-guru') ||
-                    window.location.pathname.includes('laporan-siswa');
+                    window.location.pathname.includes('laporan-siswa') ||
+                    window.location.pathname.includes('laporan-presensi') ||
+                    window.location.pathname.includes('laporan-mata-pelajaran');
 
-                if (isActiveReport) {
-                    dropdownReports.classList.remove('hidden'); // Pastikan dropdown laporan terbuka
-                    laporanIcon.classList.add('-rotate-90'); // Rotasi ikon laporan
-                    reports.setAttribute('aria-expanded', 'true'); // Update atribut
-                } else {
-                    dropdownReports.classList.add('hidden');
-                    laporanIcon.classList.remove('-rotate-90');
-                    reports.setAttribute('aria-expanded', 'false');
+                if (dropdownReports && laporanIcon && reports) {
+                    if (isActiveReport) {
+                        dropdownReports.classList.remove('hidden');
+                        laporanIcon.classList.add('-rotate-90');
+                        reports.setAttribute('aria-expanded', 'true');
+                    } else {
+                        dropdownReports.classList.add('hidden');
+                        laporanIcon.classList.remove('-rotate-90');
+                        reports.setAttribute('aria-expanded', 'false');
+                    }
                 }
             }
+
 
 
             // 🔹 Tambahkan event listener untuk klik Master Data
@@ -238,7 +248,7 @@
             }
 
             // 🔹 Tambahkan event listener untuk klik Laporan
-            if (reports && laporanIcon) {
+            if (reports && laporanIcon && dropdownReports) {
                 reports.addEventListener('click', () => {
                     dropdownReports.classList.toggle('hidden');
                     laporanIcon.classList.toggle('-rotate-90');
