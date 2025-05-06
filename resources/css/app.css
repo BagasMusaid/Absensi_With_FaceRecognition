@@ -4,3 +4,8 @@
 .rotate-180 {
     transform: rotate(180deg);
 }
+.scrollbar-hide-arrow::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+    width: 0;
+}

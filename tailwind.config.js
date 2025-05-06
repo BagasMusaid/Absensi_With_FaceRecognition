@@ -14,5 +14,6 @@ export default {
         require("flowbite/plugin")({
             datatables: true,
         }),
+        require("tailwind-scrollbar"),
     ],
 };

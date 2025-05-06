@@ -68,8 +68,8 @@ async function registerFace() {
         document.getElementById("jumlah-pengujian").innerText = i + 1;
 
         await Swal.fire({
-            title: `Ambil sudut wajah ${i + 1} dari ${jumlahPengujian}`,
-            text: "Posisikan wajah dan klik OK untuk ambil.",
+            title: `Ambil gambar ke- ${i + 1} dari ${jumlahPengujian} gambar`,
+            text: "Posisikan wajah dan klik OK",
             icon: "info",
         });
 
@@ -100,7 +100,15 @@ async function registerFace() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         //crop wajah
         const box = detection.detection.box;
-        ctx.drawImage(
+
+        // Buat canvas sementara untuk crop
+        const cropCanvas = document.createElement("canvas");
+        cropCanvas.width = box.width;
+        cropCanvas.height = box.height;
+        const cropCtx = cropCanvas.getContext("2d");
+
+        // Gambar bagian wajah yang terdeteksi ke canvas crop
+        cropCtx.drawImage(
             video,
             box.x,
             box.y,
@@ -108,12 +116,13 @@ async function registerFace() {
             box.height,
             0,
             0,
-            canvas.width,
-            canvas.height
+            box.width,
+            box.height
         );
 
-        const image = canvas.toDataURL("image/jpeg");
-        collectedImages.push(image);
+        // Ambil hasil crop sebagai base64
+        const croppedImage = cropCanvas.toDataURL("image/jpeg");
+        collectedImages.push(croppedImage);
     }
 
     // Kirim ke server Laravel

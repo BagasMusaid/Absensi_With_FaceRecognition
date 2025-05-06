@@ -14,9 +14,14 @@ class presensi extends Model
         'tanggal',
         'waktu_presensi',
         'status',
+        'jadwal_id'
     ];
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class, 'nis_siswa', 'NIS');
+    }
+    public function JadwalPresensi(): BelongsTo
+    {
+        return $this->belongsTo(JadwalPresensi::class, 'jadwal_id', 'id');
     }
 }

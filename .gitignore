@@ -18,4 +18,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-face_training/face_model.h5
+/face_training/face_model.h5

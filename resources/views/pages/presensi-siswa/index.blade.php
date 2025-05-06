@@ -48,11 +48,18 @@
                             Presensi Khusus</a>
                     </div>
 
-                    <div
+                    {{-- <div
                         class=" flex justify-center items-center cursor-pointer border-2  border-blue-600 hover:border-blue-700 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
-                        <a href="{{ Route('presensi.presensi-siswa') }}"
+                        <a href="{{ Route('presensi.presensi-wajah') }}"
                             class="text-blue-600 hover:text-blue-500 font-bold text-center  text-[11px] md:text-sm px-4 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             Presensi Wajah</a>
+                    </div> --}}
+
+                    <div
+                        class=" flex justify-center items-center cursor-pointer border-2  border-blue-600 hover:border-blue-700 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg">
+                        <a href="{{ Route('StatusPresensi') }}"
+                            class="text-blue-600 hover:text-blue-500 font-bold text-center  text-[11px] md:text-sm px-4 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            Lihat Status Presensi</a>
                     </div>
                 </div>
                 <div class="flex gap-1">

@@ -18,7 +18,8 @@
                     Batas Presensi
                 </h3>
 
-                <form>
+                <form method="post" action="{{ route('jadwal-presensi') }}">
+                    @csrf
                     <div class="max-w-[29rem] mx-auto grid grid-cols-3 gap-4">
                         <div>
                             <label for="start-time"
@@ -33,10 +34,14 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="time" id="start-time"
-                                    class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    min="09:00" max="18:00" value="00:00" required />
+                                <input type="time" id="start-time" name="jam_mulai"
+                                    class="bg-gray-50 border leading-none {{ $errors->has('jam_mulai') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value="{{ old('jam_mulai', '00:00') }}" required />
                             </div>
+                            @error('jam_mulai')
+                                <small
+                                    class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                            @enderror
                         </div>
                         <div>
                             <label for="end-time"
@@ -51,10 +56,14 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="time" id="end-time"
-                                    class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    min="09:00" max="18:00" value="00:00" required />
+                                <input type="time" id="end-time" name="jam_selesai"
+                                    class="bg-gray-50 border leading-none {{ $errors->has('jam_selesai') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    value="{{ old('jam_selesai', '00:00') }}" required />
                             </div>
+                            @error('jam_selesai')
+                                <small
+                                    class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                            @enderror
                         </div>
                         <div>
                             <label for="kelas_id" class="block text-gray-700 text-sm font-medium mb-2">
@@ -64,12 +73,17 @@
                                 class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 {{ $errors->has('kelas_id') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
                                 <option value="" disabled {{ old('kelas_id') ? '' : 'selected' }}>Pilih Kelas
                                 </option>
-                                {{-- @foreach ($kelas as $ks)
-                                    <option value="{{ $ks->id }}" {{ old('kelas_id') == $ks->id ? 'selected' : '' }}>
+                                @foreach ($kelasDenganJadwalHariIni as $ks)
+                                    <option value="{{ $ks->id }}"
+                                        {{ old('kelas_id') == $ks->id ? 'selected' : '' }}>
                                         Kelas {{ $ks->nama_kelas }}
                                     </option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
+                            @error('kelas_id')
+                                <small
+                                    class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                            @enderror
                         </div>
                     </div>
                     <button type="submit"

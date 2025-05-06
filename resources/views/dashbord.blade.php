@@ -45,14 +45,14 @@
                                 class="py-2 px-5 ml-3 mt-2 mb-2 md:text-sm text-xs font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-600 focus:z-10 focus:ring-4 focus:ring-gray-100">
                                 Buat Pendaftaran Wajah
                             </a> --}}
-                            {{-- <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
-                                class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
-                                Proses Presensi
-                            </a> --}}
-                            <a href="{{ Route('presensi.presensi-siswa') }}"
+                            <a data-modal-target="jadwal-presensi" data-modal-toggle="jadwal-presensi"
                                 class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
                                 Proses Presensi
                             </a>
+                            {{-- <a href="{{ Route('presensi.presensi-siswa') }}"
+                                class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
+                                Proses Presensi
+                            </a> --}}
 
                             <button type="button"
                                 class="ml-1 md:ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"

@@ -1,28 +1,30 @@
 import os
 import json
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+import numpy as np
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Input
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
-from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, confusion_matrix
 
-# ======== Konfigurasi Path =========
+# ========== Konfigurasi Path ==========
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATASET_DIR = os.path.join(BASE_DIR, "public", "storage", "face-labels")
 SISWA_JSON = os.path.join(BASE_DIR, "face_training", "siswa.json")
 ENCODER_PATH = os.path.join(BASE_DIR, "face_training", "label_encoder.json")
 MODEL_PATH = os.path.join(BASE_DIR, "face_training", "face_model.h5")
 
-# ======== Hapus Model Lama =========
+# ========== Hapus Model Lama ==========
 if os.path.exists(MODEL_PATH):
     os.remove(MODEL_PATH)
-    print(" Model lama dihapus.")
+    print("Model lama dihapus.")
 
 if os.path.exists(ENCODER_PATH):
     os.remove(ENCODER_PATH)
     print("Label encoder lama dihapus.")
 
-# ======== ImageDataGenerator =========
+# ========== ImageDataGenerator ==========
 datagen = ImageDataGenerator(
     rescale=1./255,
     validation_split=0.2,
@@ -30,7 +32,9 @@ datagen = ImageDataGenerator(
     width_shift_range=0.1,
     height_shift_range=0.1,
     zoom_range=0.1,
-    horizontal_flip=True
+    horizontal_flip=True,
+    shear_range=0.2,
+    brightness_range=[0.8, 1.2],
 )
 
 train_gen = datagen.flow_from_directory(
@@ -42,12 +46,6 @@ train_gen = datagen.flow_from_directory(
     shuffle=True
 )
 
-print("Folder yang digunakan untuk training:")
-print(os.listdir(DATASET_DIR))
-
-print("Label yang terdeteksi:")
-print(train_gen.class_indices)
-
 val_gen = datagen.flow_from_directory(
     DATASET_DIR,
     target_size=(160, 160),
@@ -57,24 +55,21 @@ val_gen = datagen.flow_from_directory(
     shuffle=True
 )
 
-# ======== Simpan Label Encoder (NIS ke Nama) =========
-nis_list = list(train_gen.class_indices.keys())  # ['20230123', '20230124', ...]
+# ========== Simpan Label Encoder ==========
+nis_list = list(train_gen.class_indices.keys())
 encoded_labels = [None] * len(train_gen.class_indices)
 
-# Ambil data siswa dari siswa.json
 try:
     with open(SISWA_JSON, "r") as f:
         siswa_map = json.load(f)
 except Exception as e:
-    print(f"Error saat membaca file siswa.json: {e}")
+    print(f"Error saat membaca siswa.json: {e}")
     siswa_map = {}
 
-# Mengisi encoded_labels dengan nama siswa
 for label, index in train_gen.class_indices.items():
     nama = siswa_map.get(label, "Unknown")
     encoded_labels[index] = f"{nama} ({label})"
 
-# Menyimpan encoded_labels ke dalam file JSON
 try:
     with open(ENCODER_PATH, "w") as f:
         json.dump(encoded_labels, f)
@@ -86,36 +81,59 @@ print("Label yang digunakan:")
 for i, label in enumerate(encoded_labels):
     print(f"{i}: {label}")
 
-# ======== Definisi Model CNN Conv2D =========
-model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(160, 160, 3), padding='same'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Dropout(0.25),
+# ========== Bangun Model MobileNetV2 + Custom Head ==========
+num_classes = train_gen.num_classes
 
-    Conv2D(64, (3, 3), activation='relu', padding='same'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Dropout(0.25),
+base_model = MobileNetV2(include_top=False, weights='imagenet', input_shape=(160, 160, 3))
+base_model.trainable = False  # Freeze awal
 
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dropout(0.5),
-    Dense(train_gen.num_classes, activation='softmax')
-])
+x = base_model.output
+x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+x = MaxPooling2D(pool_size=(2, 2))(x)
+x = Dropout(0.25)(x)
 
-model.compile(
-    optimizer=Adam(learning_rate=0.001),
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
+x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
+x = MaxPooling2D(pool_size=(2, 2))(x)
+x = Dropout(0.25)(x)
 
-# ======== Training Model =========
+x = Flatten()(x)
+x = Dense(128, activation='relu')(x)
+x = Dropout(0.3)(x)
+output = Dense(num_classes, activation='softmax')(x)
+
+model = Model(inputs=base_model.input, outputs=output)
+model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+
+# ========== Pretraining ==========
+print("=== Pretraining (10 Epochs - Frozen Base) ===")
 model.fit(
     train_gen,
-    epochs=30,
+    epochs=10,
     validation_data=val_gen
 )
 
-# ======== Simpan Model =========
-model.save(MODEL_PATH)
-print("Model CNN selesai dilatih dan disimpan ke:", MODEL_PATH)
+# ========== Fine-Tuning ==========
+print("=== Fine-tuning (20 Epochs - Unfreeze Last 50 Layers) ===")
+# Unfreeze sebagian besar layer dari base_model
+for layer in base_model.layers[-50:]:
+    layer.trainable = True
 
+model.compile(optimizer=Adam(learning_rate=1e-5), loss='categorical_crossentropy', metrics=['accuracy'])
+
+model.fit(
+    train_gen,
+    epochs=20,
+    validation_data=val_gen
+)
+
+# ========== Evaluasi ==========
+y_pred = model.predict(val_gen)
+y_true = val_gen.classes
+y_pred_labels = y_pred.argmax(axis=1)
+
+print(confusion_matrix(y_true, y_pred_labels))
+print(classification_report(y_true, y_pred_labels, target_names=encoded_labels))
+
+# ========== Simpan Model ==========
+model.save(MODEL_PATH)
+print("Model selesai dilatih dan disimpan di:", MODEL_PATH)

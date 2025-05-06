@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\presensi\StorePresensiRequest;
 use App\Http\Requests\presensi\UpdatePresensiRequest;
 use App\Models\master_data\Kelas;
+use App\Models\presensi\JadwalPresensi;
 use App\Models\presensi\presensi;
 use App\Models\presensi\Siswa;
 use Carbon\Carbon;
@@ -30,7 +31,7 @@ class PresensiSiswaController extends Controller
                     });
             });
         }
-        $presensi = $presensiQuery->paginate(5);
+        $presensi = $presensiQuery->latest()->paginate(5);
         $kelas = Kelas::all();
         if ($request->ajax()) {
             return view('pages.presensi-siswa.index', compact('presensi', 'kelas'))->render();
@@ -134,5 +135,23 @@ class PresensiSiswaController extends Controller
         })->with('siswa.kelas')->paginate(5);
 
         return view('pages.presensi-siswa.filtered-kelas', compact('presensi'))->render();
+    }
+    public function status_presensi()
+    {
+        $jadwalHariIni = JadwalPresensi::with('kelas')
+            ->whereDate('tanggal', Carbon::today())
+            ->paginate(10); // ganti jumlah per halaman sesuai kebutuhan
+
+        $jadwalHariIni->getCollection()->transform(function ($jadwal) {
+            $now = Carbon::now();
+            $jamMulai = Carbon::parse("{$jadwal->tanggal} {$jadwal->jam_mulai}");
+            $jamSelesai = Carbon::parse("{$jadwal->tanggal} {$jadwal->jam_selesai}");
+
+            $jadwal->status = $now->between($jamMulai, $jamSelesai) ? 'live' : 'down';
+
+            return $jadwal;
+        });
+
+        return view('pages.presensi-siswa.status-presensi', compact('jadwalHariIni'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\master_data;
 
+use App\Models\presensi\JadwalPresensi;
 use App\Models\presensi\Siswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,5 +35,9 @@ class Kelas extends Model
     public function tahun_ajaran(): BelongsTo
     {
         return $this->belongsTo(TahunAjaran::class, 'kd_tahun_ajaran', 'id');
+    }
+    public function jadwal_presensi(): HasMany
+    {
+        return $this->hasMany(JadwalPresensi::class, 'kelas_id', 'id');
     }
 }

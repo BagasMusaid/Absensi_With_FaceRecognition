@@ -10,6 +10,7 @@ use App\Http\Controllers\laporan\LaporanGuruController;
 use App\Http\Controllers\laporan\LaporanMapelController;
 use App\Http\Controllers\laporan\LaporanPresensiController;
 use App\Http\Controllers\laporan\LaporanSiswaController;
+use App\Http\Controllers\laporan\RangkingController;
 use App\Http\Controllers\master_data\GuruPiketController;
 use App\Http\Controllers\master_data\JadwalController;
 use App\Http\Controllers\master_data\KelasController;
@@ -58,9 +59,17 @@ Route::controller(RegisterController::class)->group(function () {
 });
 Route::middleware(['auth:web,gurus,wali'])->group(function () {
     Route::resource('guru', GuruController::class);
+    Route::resource('siswa', SiswaController::class);
+    Route::resource('mapel', MapelController::class);
+    Route::get('/siswa/filter-by-kelas/{kelasId}', [SiswaController::class, 'filterByKelas']);
+});
+Route::middleware(['auth:web'])->group(function () {
+    Route::resource('kelas', KelasController::class);
+    Route::resource('tahun-ajaran', TahunAjaranController::class);
+    Route::resource('walikelas', WalikelasController::class);
 });
 
-Route::middleware([EnsureUserIsGuru::class, EnsureUserIsWalikelas::class])->group(function () {});
+// Route::middleware([EnsureUserIsGuru::class, EnsureUserIsWalikelas::class])->group(function () {});
 Route::middleware(['auth:gurus,wali', 'verified'])->group(function () {
     Route::prefix('laporan-siswa')->name('laporan-siswa.')->controller(LaporanSiswaController::class)->group(function () {
         Route::get('/', 'index');
@@ -94,31 +103,35 @@ Route::middleware(['auth:gurus', 'verified'])->group(function () {
         Route::get('/download-excel-guru', 'export_excel')->name('download-excel');
     });
 });
-Route::middleware(['auth:web,wali,guru_piket,gurus', 'verified'])->group(function () {
-    Route::get('/presensi', function () {
-        return view('pages.presensi');
-    })->name('presensi');
-    Route::resource('siswa', SiswaController::class);
-    Route::resource('mapel', MapelController::class);
-    Route::resource('kelas', KelasController::class);
-    Route::resource('guru-piket', GuruPiketController::class);
-    Route::resource('tahun-ajaran', TahunAjaranController::class);
+Route::middleware(['auth:wali', 'verified'])->group(function () {
     Route::prefix('daftar-wajah')->name('daftar-wajah.')->controller(DaftarPresensiController::class)->group(function () {
         Route::get('/json', 'dataWajah')->name('data-wajah');
         Route::get('/train-model', 'trainModel')->name('train');
         Route::post('/simpan-wajah', 'store')->name('simpan-wajah');
         Route::get('/{id}', 'index')->name('index');
     });
+});
+Route::middleware(['auth:wali,guru_piket', 'verified'])->group(function () {
     Route::prefix('presensi')->name('presensi.')->controller(PresensiController::class)->group(function () {
-        Route::get('/', 'index')->name('presensi-siswa');
+        Route::get('/{kelasId}', 'index')->name('presensi-wajah');
         Route::post('/proses', 'store')->name('simpan-presensi');
     });
-
     Route::resource('presensi-siswa', PresensiSiswaController::class);
+    Route::get('/presensi/kelas/{jadwalId}/data', [PresensiController::class, 'getPresensiByJadwal']);
     Route::get('/get-siswa-by-kelas/{kelasId}', [PresensiSiswaController::class, 'getSiswaByKelas']);
+    Route::get('/status-presensi', [PresensiSiswaController::class, 'status_presensi'])->name('StatusPresensi');
     Route::get('/presensi/filter-by-kelas/{kelasId}', [PresensiSiswaController::class, 'filterByKelas']);
-    Route::get('/siswa/filter-by-kelas/{kelasId}', [SiswaController::class, 'filterByKelas']);
-    Route::resource('walikelas', WalikelasController::class);
+    Route::post('/jadwal-presensi', [DashbordController::class, 'store_jadwal'])->name('jadwal-presensi');
+});
+Route::middleware(['auth:web,guru_piket,wali', 'verified'])->group(function () {
+    Route::resource('guru-piket', GuruPiketController::class);
+});
+
+Route::middleware(['auth:web,wali,guru_piket,gurus', 'verified'])->group(function () {
+    Route::prefix('ranking-kehadiran')->name('ranking.')->controller(RangkingController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/get-ranking-presensi', 'getRanking')->name('kehadiran.filter');
+    });
     Route::prefix('akun')->name('akun.')->controller(AkunController::class)->group(function () {
         Route::get('/', 'index');
         Route::patch('/update-profil', 'update_profil')->name('updateProfil');

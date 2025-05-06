@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 
-function active_class($path, $active = 'bg-gray-500 hover:bg-gray-500 group-hover:bg-gray-500 text-white')
+function active_class($path, $active = 'bg-purple-700 hover:bg-gray-500 group-hover:bg-gray-500 text-white shadow-lg')
 {
     return call_user_func_array('Request::is', (array)$path) ? $active : 'hover:bg-gray-100 group-hover:text-gray-900';
 }

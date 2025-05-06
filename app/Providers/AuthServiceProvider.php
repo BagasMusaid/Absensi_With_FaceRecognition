@@ -31,7 +31,9 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('akses-guru_piket', function ($user) {
-            return auth()->guard('guru_piket')->check();
+            return auth()->guard('guru_piket')->check()
+                || auth()->guard('web')->check()
+                || auth()->guard('wali')->check();
         });
 
         Gate::define('akses-kepala_sekolah', function ($user) {

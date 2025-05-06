@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('presensis', function (Blueprint $table) {
+        Schema::create('jadwal_presensis', function (Blueprint $table) {
             $table->id();
-            $table->string('nis_siswa');
+            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('cascade');
             $table->date('tanggal');
-            $table->time('waktu_presensi');
-            $table->enum('status', ['Hadir', 'Alpha', 'Sakit', 'Izin']);
-            $table->foreign('nis_siswa')->references('NIS')->on('siswas')->onDelete('cascade');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('presensis');
+        Schema::dropIfExists('jadwal_presensis');
     }
 };

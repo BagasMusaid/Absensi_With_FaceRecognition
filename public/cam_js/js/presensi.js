@@ -86,23 +86,54 @@ window.addEventListener("load", async () => {
                         }
                     );
 
-                    const result = await response.json(); // hasil dari Flask backend
-                    // Bungkus menjadi array jika bukan array
-                    const results = Array.isArray(result) ? result : [result];
-
+                    const results = await response.json(); // hasil dari Flask backend
+                    console.log(results);
                     // Sekarang gunakan hasilPrediksi untuk dicek panjangnya
                     if (results.length === resizedDetections.length) {
                         results.forEach(async (prediction, i) => {
-                            const label = prediction.label;
-                            const confidence = prediction.confidence;
-                            const box = resizedDetections[i].detection.box;
+                            const { label, confidence, location } = prediction;
+                            const [top, right, bottom, left] =
+                                prediction.location;
 
-                            // Gambar kotak deteksi
-                            const drawBox = new faceapi.draw.DrawBox(box, {
-                                label: `${label} (${(confidence * 100).toFixed(
-                                    2
-                                )}%)`, // tampilkan confidence
+                            // Titik tengah dari bounding box Flask (catatan: right > left, bottom > top)
+                            const centerX = (left + right) / 2;
+                            const centerY = (top + bottom) / 2;
+
+                            // Konversi dan cari box terdekat dari face-api.js
+                            let closestDetection = null;
+                            let minDistance = Infinity;
+
+                            resizedDetections.forEach((detection) => {
+                                const box = detection.detection.box;
+                                const boxCenterX = box.x + box.width / 2;
+                                const boxCenterY = box.y + box.height / 2;
+
+                                const distance = Math.sqrt(
+                                    Math.pow(centerX - boxCenterX, 2) +
+                                        Math.pow(centerY - boxCenterY, 2)
+                                );
+
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    closestDetection = detection;
+                                }
                             });
+                            if (!closestDetection) {
+                                console.warn(
+                                    "Tidak ada deteksi cocok untuk:",
+                                    label
+                                );
+                                return;
+                            }
+                            // Gambar bounding box
+                            const drawBox = new faceapi.draw.DrawBox(
+                                closestDetection.detection.box,
+                                {
+                                    label: `${label} (${(
+                                        confidence * 100
+                                    ).toFixed(2)}%)`,
+                                }
+                            );
                             drawBox.draw(canvas);
 
                             // Tambahkan validasi confidence di sini
@@ -128,6 +159,13 @@ window.addEventListener("load", async () => {
                                 }
 
                                 const nis_siswa = nisMatch[1];
+                                if (!window.kelasAktifNIS.includes(nis_siswa)) {
+                                    console.warn(
+                                        "Siswa bukan dari kelas yang aktif, presensi ditolak:",
+                                        nis_siswa
+                                    );
+                                    return;
+                                }
                                 const now = new Date();
                                 const tanggal = now.toISOString().slice(0, 10);
                                 const waktu_presensi = now
@@ -155,7 +193,7 @@ window.addEventListener("load", async () => {
                                 if (res.ok) {
                                     console.log("Presensi berhasil dicatat");
                                     window.presensiDicatat[label] = true;
-
+                                    updateTabelPresensi();
                                     document.getElementById(
                                         "namaPresensi"
                                     ).innerText = label;
@@ -177,7 +215,7 @@ window.addEventListener("load", async () => {
                         console.error(
                             "Mismatch antara jumlah hasil deteksi dan hasil prediksi:",
                             {
-                                hasilFlask: result,
+                                hasilFlask: results,
                                 hasilDeteksi: resizedDetections,
                             }
                         );

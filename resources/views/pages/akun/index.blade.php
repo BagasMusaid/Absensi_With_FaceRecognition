@@ -76,7 +76,7 @@
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d=" M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0
-                                                                                                                                                                                                                                                                                                                        1 2 2z" />
+                                                                                                                                                                                                                                                                                                                                                                                                            1 2 2z" />
                                     <circle cx="12" cy="13" r="4" />
                                 </svg>
                             </a>
@@ -84,7 +84,11 @@
                     </div>
                     <div class="flex justify-center">
                         <a data-modal-target="edit-profil" data-modal-toggle="edit-profil"
-                            class="text-purple-700  cursor-pointer border border-purple-700 focus:ring-4 focus:ring-purple-300  rounded-lg mt-5 md:mt-10  text-sm font-bold px-10 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ubah
+                            class="text-purple-700  cursor-pointer border border-purple-700 focus:ring-4 focus:ring-purple-300  rounded-lg mt-5 md:mt-7  text-sm font-bold px-10 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ubah
+                            Profil</a>
+                    </div>
+                    <div class="flex justify-center mt-2 cursor-pointer">
+                        <a href="{{ url('') }}" class="text-center font-semibold text-red-600 text-sm ">Delete
                             Profil</a>
                     </div>
                 </div>
@@ -138,7 +142,8 @@
                     </div>
                     <div class="mt-10 mb-10">
                         <a data-modal-target="ubah-data" data-modal-toggle="ubah-data"
-                            class="py-2 px-4 bg-purple-700 rounded-lg text-white font-semibold cursor-pointer">Ubah Data</a>
+                            class="py-2 px-4 bg-purple-700 rounded-lg text-white font-semibold cursor-pointer">Ubah
+                            Data</a>
                     </div>
                 </div>
 
