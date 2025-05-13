@@ -27,7 +27,7 @@
             <td class="px-6 py-3 flex items-center justify-center">
                 <!-- Modal toggle -->
                 <div>
-                    <a type="button" id="edit-btn" data-modal- target="edit-siswa-{{ $item->kd_siswa }}"
+                    <a type="button" id="edit-btn" data-modal-target="edit-siswa-{{ $item->kd_siswa }}"
                         data-modal-show="edit-siswa-{{ $item->kd_siswa }}"
                         data-tooltip-target="tooltip-edit-{{ $loop->iteration }}" data-id="{{ $item->kd_siswa }}">
                         <svg class="w-6 h-6 text-blue-600 dark:text-gray-400" viewBox="0 0 512 512" fill="currentColor"

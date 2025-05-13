@@ -5,7 +5,7 @@
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
                     <a href="{{ Route('dashbord') }}"
-                        class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                        class="inline-flex items-center text-xs md:text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                         <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                             viewBox="0 0 20 20">
                             <path
@@ -22,7 +22,7 @@
                                 d="m1 9 4-4-4-4" />
                         </svg>
                         <a href="{{ url('siswa') }}"
-                            class="ms-1 text-sm font-medium  {{ request()->is('siswa') ? 'text-blue-600' : 'text-gray-700' }} hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+                            class="ms-1 text-xs md:text-sm font-medium  {{ request()->is('siswa') ? 'text-blue-600' : 'text-gray-700' }} hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
                             Data Siswa</a>
 
                     </div>
@@ -161,8 +161,8 @@
                                     <td class="px-6 py-3 flex items-center justify-center">
                                         <!-- Modal toggle -->
                                         <div>
-                                            <a type="button" id="edit-btn" data-modal-
-                                                target="edit-siswa-{{ $item->kd_siswa }}"
+                                            <a type="button" id="edit-btn"
+                                                data-modal-target="edit-siswa-{{ $item->kd_siswa }}"
                                                 data-modal-show="edit-siswa-{{ $item->kd_siswa }}"
                                                 data-tooltip-target="tooltip-edit-{{ $loop->iteration }}"
                                                 data-id="{{ $item->kd_siswa }}">
@@ -227,23 +227,44 @@
 @endsection
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
             // ==================== FILTER PRESENSI BERDASARKAN KELAS ====================
-            const kelasSelect = document.getElementById('kelas');
-            if (kelasSelect) {
-                kelasSelect.addEventListener('change', function() {
-                    const kelasId = this.value;
 
-                    fetch(`/siswa/filter-by-kelas/${kelasId}`)
-                        .then(response => response.text())
-                        .then(data => {
-                            document.getElementById('siswa-list').innerHTML = data;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching data:', error);
+            $("#kelas").on("change", function() {
+                let kelasId = $(this).val();
+
+                $.ajax({
+                    url: "/siswa/filter-by-kelas/" + kelasId,
+                    type: "GET",
+                    beforeSend: function() {
+                        $("#loading").removeClass("hidden");
+                    },
+                    success: function(data) {
+                        $("#siswa-list").html(data);
+
+                        // Re-bind tombol edit setelah konten di-load
+                        $(document).on("click", "#edit-btn", function() {
+                            let modalId = $(this).data("modal-target");
+                            $("#" + modalId).removeClass("hidden").addClass(
+                                "flex backdrop-blur-sm bg-opacity-90 drop-shadow-sm"
+                            );
                         });
+
+                        // Re-bind tombol close modal
+                        $(document).on("click", "[data-modal-hide]", function() {
+                            let modalId = $(this).data("modal-hide");
+                            $("#" + modalId).addClass("hidden");
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    },
+                    complete: function() {
+                        $("#loading").addClass("hidden");
+                    }
                 });
-            }
+            });
+
 
             // ==================== SEARCH MAPEL (DEBOUNCED AJAX) ====================
             let delayTimer;

@@ -21,7 +21,8 @@ class TahunAjaranController extends Controller
             $ta->where(function ($query) use ($search) {
                 $query->where('tahun_mulai', 'like', "%$search%")
                     ->orWhere('tahun_selesai', 'like', "%$search%")
-                    ->orWhere('semester', 'like', "%$search%");
+                    ->orWhere('semester', 'like', "%$search%")
+                    ->orWhere('status', 'like', "%$search%");
             });
         }
         $tahunAjaran = $ta->latest()->orderBy('tahun_mulai', 'desc')->paginate(5);

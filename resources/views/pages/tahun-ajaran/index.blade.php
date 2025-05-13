@@ -5,7 +5,7 @@
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
                     <a href="{{ Route('dashbord') }}"
-                        class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                        class="inline-flex items-center text-xs md:text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                         <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                             viewBox="0 0 20 20">
                             <path
@@ -22,7 +22,7 @@
                                 d="m1 9 4-4-4-4" />
                         </svg>
                         <a href="{{ url('tahun-ajaran') }}"
-                            class="ms-1 text-sm font-medium  {{ request()->is('tahun-ajaran') ? 'text-blue-600' : 'text-gray-700' }} hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+                            class="ms-1 text-xs md:text-sm font-medium  {{ request()->is('tahun-ajaran') ? 'text-blue-600' : 'text-gray-700' }} hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
                             Data Tahun Ajaran</a>
 
                     </div>
@@ -72,13 +72,16 @@
                             <th scope="col" class="px-8 py-3 text-center">
                                 Tahun Mulai
                             </th>
-                            <th scope="col" class="px-6 py-3 text-center">
+                            <th scope="col" class="px-8 py-3 text-center">
                                 Tahun Selesai
                             </th>
-                            <th scope="col" class="px-6 py-3 text-center">
+                            <th scope="col" class="px-8 py-3 text-center">
                                 Semester
                             </th>
-                            <th scope="col" class="px-6 py-3 text-center">
+                            <th scope="col" class="px-8 py-3 text-center">
+                                Status
+                            </th>
+                            <th scope="col" class="px-8 py-3 text-center">
                                 Action
                             </th>
                         </tr>
@@ -93,12 +96,18 @@
                                 <td class="px-8 py-3 text-sm font-semibold capitalize text-center">
                                     {{ $ta->tahun_mulai }}
                                 </td>
-                                <td class="px-6 py-3 text-sm font-semibold capitalize text-center">{{ $ta->tahun_selesai }}
+                                <td class="px-8 py-3 text-sm font-semibold capitalize text-center">{{ $ta->tahun_selesai }}
                                 </td>
-                                <td class="px-6 py-3 text-sm font-semibold capitalize text-center">
+                                <td class="px-8 py-3 text-sm font-semibold capitalize text-center">
                                     {{ $ta->semester }}
                                 </td>
-                                <td class="px-6 py-3 flex items-center justify-center">
+                                <td class="px-8 py-3 text-sm font-semibold capitalize text-center">
+                                    <h4
+                                        class="{{ trim($ta->status) == 'aktif' ? 'bg-purple-500 text-white' : 'bg-red-500 text-white' }} py-0.5 md:py-1 md:px-0.5 mx-1 md:mx-3 font-medium text-[9px] md:text-xs rounded-md">
+                                        {{ $ta->status }}
+                                    </h4>
+                                </td>
+                                <td class="px-8 py-3 flex items-center justify-center">
                                     <!-- Modal toggle -->
                                     <div>
                                         <a type="button" id="edit-btn"

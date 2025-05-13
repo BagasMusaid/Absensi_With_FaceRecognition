@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('foto_profil')->nullable();
             $table->foreignId('kd_tahun_ajaran')->nullable()->constrained('tahun_ajarans')->onDelete('cascade');
             $table->string('password');
+            $table->rememberToken()->nullable();
             $table->timestamps();
         });
     }

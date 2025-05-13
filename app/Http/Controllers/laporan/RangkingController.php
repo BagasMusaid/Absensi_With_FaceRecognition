@@ -77,9 +77,6 @@ class RangkingController extends Controller
                     'jumlah_alpha' => $item->jumlah_alpha,
                 ];
             });
-
-
-        // Kalau bukan AJAX, tetap tampilkan view
         return view('reports.ranking.index', compact('rankingSakit', 'rankingIzin', 'rankingAlpha'));
     }
 }

@@ -185,6 +185,43 @@ class AkunController extends Controller
             return redirect()->back()->withInput();
         }
     }
+    public function delete_profil(Request $request)
+    {
+        if (Auth::guard('wali')->check()) {
+            $user = Auth::guard('wali')->user();
+            $model = Walikelas::find($user->id);
+            $folder = 'public/profil_wali';
+        } elseif (Auth::guard('guru_piket')->check()) {
+            $user = Auth::guard('guru_piket')->user();
+            $model = GuruPiket::find($user->id);
+            $folder = 'public/profil_guru_piket';
+        } elseif (Auth::guard('gurus')->check()) {
+            $user = Auth::guard('gurus')->user();
+            $model = Guru::where('kd_guru', $user->kd_guru)->first();
+            $folder = 'public/profil_guru';
+        } elseif (Auth::guard('web')->check()) {
+            $user = Auth::guard('web')->user();
+            $model = User::find($user->id);
+            $folder = 'public/profil_admin';
+        } else {
+            return back()->with('error', 'Pengguna tidak dikenali.');
+        }
+
+        if (!$model) {
+            return back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        if ($model->foto_profil && Storage::exists($folder . '/' . $model->foto_profil)) {
+            Storage::delete($folder . '/' . $model->foto_profil);
+            $model->update(['foto_profil' => null]);
+
+            alert()->success('Berhasil', 'Foto profil berhasil dihapus.');
+        } else {
+            alert()->info('Info', 'Foto profil tidak ditemukan atau sudah dihapus.');
+        }
+
+        return redirect()->back();
+    }
 
     /**
      * Store a newly created resource in storage.

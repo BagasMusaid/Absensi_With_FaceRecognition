@@ -57,6 +57,24 @@
                             <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
                         @enderror
                     </div>
+                    <div>
+                        <label for="status" class="block text-gray-700 text-sm font-bold mb-2">
+                            Status
+                        </label>
+                        <select id="status" name="status"
+                            class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 {{ $errors->has('status') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
+                            <option value="" disabled {{ old('status') ? '' : 'selected' }}>Pilih Status
+                            </option>
+                            <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>
+                                Aktif
+                            </option>
+                            <option value="tidak" {{ old('status') == 'tidak' ? 'selected' : '' }}>
+                                Tidak</option>
+                        </select>
+                        @error('status')
+                            <small class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>
+                        @enderror
+                    </div>
 
                     <button type="submit"
                         class="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">SIMPAN</button>

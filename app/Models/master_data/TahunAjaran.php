@@ -13,7 +13,8 @@ class TahunAjaran extends Model
     protected $fillable = [
         'tahun_mulai',
         'tahun_selesai',
-        'semester'
+        'semester',
+        'status'
     ];
 
     public function kelas(): HasMany

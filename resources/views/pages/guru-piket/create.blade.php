@@ -48,18 +48,18 @@
                                 class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 {{ $errors->has('hari') ? 'border-red-600' : 'border-gray-300' }} text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
                                 <option value="" disabled {{ old('hari') ? '' : 'selected' }}>Pilih Hari Piket
                                 </option>
-                                <option value="senin" {{ old('hari') == 'senin' ? 'selected' : '' }}>
+                                <option value="Senin" {{ old('hari') == 'Senin' ? 'selected' : '' }}>
                                     Senin
                                 </option>
-                                <option value="selasa" {{ old('hari') == 'selasa' ? 'selected' : '' }}>
+                                <option value="Selasa" {{ old('hari') == 'Selasa' ? 'selected' : '' }}>
                                     Selasa</option>
-                                <option value="rabu" {{ old('hari') == 'rabu' ? 'selected' : '' }}>
+                                <option value="Rabu" {{ old('hari') == 'Rabu' ? 'selected' : '' }}>
                                     Rabu</option>
-                                <option value="kamis" {{ old('hari') == 'kamis' ? 'selected' : '' }}>
+                                <option value="Kamis" {{ old('hari') == 'Kamis' ? 'selected' : '' }}>
                                     Kamis</option>
-                                <option value="jumat" {{ old('hari') == 'jumat' ? 'selected' : '' }}>
+                                <option value="Jumat" {{ old('hari') == 'Jumat' ? 'selected' : '' }}>
                                     Jumat</option>
-                                <option value="sabtu" {{ old('hari') == 'sabtu' ? 'selected' : '' }}>
+                                <option value="Sabtu" {{ old('hari') == 'Sabtu' ? 'selected' : '' }}>
                                     Sabtu</option>
                             </select>
                             @error('hari')

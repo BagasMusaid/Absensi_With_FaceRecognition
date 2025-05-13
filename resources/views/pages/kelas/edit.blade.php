@@ -69,7 +69,7 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Catatan</label>
                             <input type="text" name="catatan" id="catatan"
                                 class="shadow-sm bg-gray-50 border {{ $errors->has('catatan') ? 'border-red-600' : 'border-gray-300' }} text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                value="{{ $k->catatan }}">
+                                value="{{ $ks->catatan }}">
                             @error('catatan')
                                 <small
                                     class="mt-1 ml-1 text-[10px] text-red-600 dark:text-red-500">{{ $message }}</small>

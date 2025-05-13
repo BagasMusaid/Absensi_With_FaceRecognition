@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('foto_profil')->nullable();
             $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('cascade');
             $table->foreign('guru_id')->references('kd_guru')->on('gurus')->onDelete('cascade');
+            $table->rememberToken()->nullable();
             $table->timestamps();
         });
     }

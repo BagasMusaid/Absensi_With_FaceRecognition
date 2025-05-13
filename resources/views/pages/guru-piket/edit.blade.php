@@ -5,6 +5,7 @@
                 <!-- Modal content -->
                 <form class="relative bg-white rounded-lg shadow dark:bg-gray-700"
                     action="{{ route('guru-piket.update', $GP->id) }}" method="POST">
+                    @csrf
                     @method('PUT')
                     <!-- Modal header -->
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -38,9 +39,9 @@
                                         Nama Guru
                                     </option>
                                     @foreach ($gurus as $ks)
-                                        @if ($ks->id != $GP->guru->kd_guru)
+                                        @if ($ks->kd_guru != $GP->guru->kd_guru)
                                             <option value="{{ $ks->kd_guru }}"
-                                                {{ old('guru_id') == $ks->id ? 'selected' : '' }}>
+                                                {{ old('guru_id', $GP->guru->kd_guru) == $ks->kd_guru ? 'selected' : '' }}>
                                                 {{ $ks->nama_guru }}
                                             </option>
                                         @endif
@@ -61,17 +62,17 @@
                                         Pilih
                                         Hari Piket
                                     </option>
-                                    <option value="senin" {{ old('hari', $GP->hari) == 'senin' ? 'selected' : '' }}>
+                                    <option value="Senin" {{ old('hari', $GP->hari) == 'Senin' ? 'selected' : '' }}>
                                         Senin</option>
-                                    <option value="selasa" {{ old('hari', $GP->hari) == 'selasa' ? 'selected' : '' }}>
+                                    <option value="Selasa" {{ old('hari', $GP->hari) == 'Selasa' ? 'selected' : '' }}>
                                         Selasa</option>
-                                    <option value="rabu" {{ old('hari', $GP->hari) == 'rabu' ? 'selected' : '' }}>
+                                    <option value="Rabu" {{ old('hari', $GP->hari) == 'Rabu' ? 'selected' : '' }}>
                                         Rabu</option>
-                                    <option value="kamis" {{ old('hari', $GP->hari) == 'kamis' ? 'selected' : '' }}>
+                                    <option value="Kamis" {{ old('hari', $GP->hari) == 'Kamis' ? 'selected' : '' }}>
                                         Kamis</option>
-                                    <option value="jumat" {{ old('hari', $GP->hari) == 'jumat' ? 'selected' : '' }}>
+                                    <option value="Jumat" {{ old('hari', $GP->hari) == 'Jumat' ? 'selected' : '' }}>
                                         Jumat</option>
-                                    <option value="sabtu" {{ old('hari', $GP->hari) == 'sabtu' ? 'selected' : '' }}>
+                                    <option value="Sabtu" {{ old('hari', $GP->hari) == 'Sabtu' ? 'selected' : '' }}>
                                         Sabtu</option>
                                 </select>
                                 @error('hari')

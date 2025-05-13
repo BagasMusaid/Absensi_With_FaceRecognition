@@ -1,7 +1,7 @@
 @extends('layouts.master2')
 @section('content')
     <!-- component -->
-    <div class="relative min-h-screen flex items-center justify-center bg-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover"
+    <div class="relative min-h-screen flex items-center justify-center bg-center py-2 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover"
         style="background-image: url({{ asset('asset/images/login.jpg') }});">
         <div class="absolute bg-black opacity-60 inset-0 z-0"></div>
         <div class="max-w-lg w-full space-y-8 p-10 z-10">
@@ -36,6 +36,25 @@
                                     <small class="mt-1 ml-1 text-xs text-red-600 dark:text-red-500">{{ $message }}</small>
                                 @enderror
                             </div>
+                        </div>
+                        <div class="w-full mt-2.5">
+                            <label for="guard" class="block  text-sm font-medium text-gray-400 mb-2">
+                                Pilih Akun
+                            </label>
+                            <select id="guard" name="guard"
+                                class="block appearance-none w-full bg-gray-50 border rounded-lg text-sm border-gray-300 text-gray-500 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
+                                <option value="" disabled {{ old('guard') ? '' : 'selected' }}>
+                                    Pilih Akun Yang
+                                    Direset</option>
+                                <option value="web">Admin</option>
+                                <option value="gurus">
+                                    Kepala Sekolah
+                                </option>
+                                <option value="wali">
+                                    Walikelas</option>
+                                <option value="guru_piket">
+                                    Guru Piket</option>
+                            </select>
                         </div>
                         <div class="mt-4">
                             <label for="password"

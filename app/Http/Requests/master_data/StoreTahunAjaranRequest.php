@@ -27,7 +27,8 @@ class StoreTahunAjaranRequest extends FormRequest
         return [
             'tahun_mulai' => 'required|numeric',
             'tahun_selesai' => 'required|numeric',
-            'semester' => 'required'
+            'semester' => 'required',
+            'status' => 'required'
         ];
     }
     public function messages(): array
@@ -37,7 +38,8 @@ class StoreTahunAjaranRequest extends FormRequest
             'tahun_selesai.required' => 'Tahun Ajaran Selesai Wajib Diisi',
             'tahun_mulai.numeric' => 'Tahun Ajaran Mulai Harus Berupa Angka',
             'tahun_selesai.numeric' => 'Tahun Ajaran Selesai Harus Berupa Angka',
-            'semester.required' => 'Semester Wajib Diisi'
+            'semester.required' => 'Semester Wajib Diisi',
+            'status.required' => 'Status Wajib Diisi'
         ];
     }
     public function attributes(): array
@@ -46,6 +48,7 @@ class StoreTahunAjaranRequest extends FormRequest
             'tahun_mulai' => 'tahun_mulai',
             'tahun_selesai' => 'tahun_selesai',
             'semester' => 'semester',
+            'status' => 'status',
         ];
     }
     public function failedValidation(ValidationValidator $validator)

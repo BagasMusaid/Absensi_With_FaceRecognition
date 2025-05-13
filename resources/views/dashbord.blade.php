@@ -2,10 +2,12 @@
 @section('content')
     <div class="mx-4 md:pl-4 sm:ml-64 mb-3">
         <div
-            class="p-4 bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 focus:ring-4 focus:outline-none focus:ring-purple-300  border border-slate-100 rounded-lg dark:border-gray-700 mt-20">
+            class="p-3 md:p-4 bg-gradient-to-br from-gray-600 via-gray-400 to-gray-200 focus:ring-4 focus:outline-none focus:ring-purple-300  border border-slate-100 rounded-lg dark:border-gray-700 mt-20">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-white font-bold text-2xs md:text-2xl mb-1">{{ $greeting }}, <span>
+                    <p class="text-white font-light md:font-medium text-[10px] md:text-base">{{ $tanggal }}</p>
+
+                    <h1 class="text-white font-bold text-xs md:text-2xl mb-1">{{ $greeting }}, <span>
                             @if (Auth::guard('wali')->check())
                                 Walikelas
                             @elseif(Auth::guard('web')->check())
@@ -17,7 +19,6 @@
                             @endif
 
                         </span></h1>
-                    <p class="text-white font-medium text-xs md:text-base">Bagaimana kabarmu hari ini ?</p>
                 </div>
                 <img src="{{ asset('asset/images/tut.png') }}
                 " class="h-10 me-3 md:h-14 md:mt-1"
@@ -49,10 +50,6 @@
                                 class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
                                 Proses Presensi
                             </a>
-                            {{-- <a href="{{ Route('presensi.presensi-siswa') }}"
-                                class="py-1.5 px-2 md:px-5 ml-1 md:ml-3 cursor-pointer mt-2 mb-2 md:text-sm text-[8px] font-medium text-white bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg">
-                                Proses Presensi
-                            </a> --}}
 
                             <button type="button"
                                 class="ml-1 md:ml-3 bg-gray-200 text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-gray-300 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
@@ -175,11 +172,17 @@
                             </h2>
                             <div class="p-4 mt-5 md:mt-10">
                                 <h2 class="font-semibold">Jumlah Mata Pelajaran</h2>
-                                <h3 class="font-bold text-lg">{{ $Mapels }}</h3>
+                                <h3 class="font-bold text-lg text-gray-600">{{ $Mapels }}</h3>
                             </div>
                             <div class="p-4 mt-5 md:mt-8">
-                                <h2 class="font-semibold">Tahun Ajaran</h2>
-                                <h3 class="font-bold text-lg">2024</h3>
+                                <h2 class="font-semibold ">Tahun Ajaran</h2>
+                                <h3 class="font-bold text-lg text-gray-600">
+                                    {{ $tahunAjaran->tahun_mulai }}/{{ $tahunAjaran->tahun_selesai }}</h3>
+                            </div>
+                            <div class="p-4 mt-5 md:mt-8">
+                                <h2 class="font-semibold ">Semester</h2>
+                                <h3 class="font-bold text-lg text-gray-600">
+                                    {{ $tahunAjaran->semester }}</h3>
                             </div>
                         </div>
                     </div>

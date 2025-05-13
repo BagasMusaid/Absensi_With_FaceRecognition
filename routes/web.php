@@ -26,6 +26,7 @@ use App\Http\Middleware\EnsureUserHasAccess;
 use App\Http\Middleware\EnsureUserIsGuru;
 use App\Http\Middleware\EnsureUserIsWalikelas;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 // Auth::routes(['verify' => true]);
@@ -59,9 +60,11 @@ Route::controller(RegisterController::class)->group(function () {
 });
 Route::middleware(['auth:web,gurus,wali'])->group(function () {
     Route::resource('guru', GuruController::class);
-    Route::resource('siswa', SiswaController::class);
-    Route::resource('mapel', MapelController::class);
     Route::get('/siswa/filter-by-kelas/{kelasId}', [SiswaController::class, 'filterByKelas']);
+    Route::prefix('ranking-kehadiran')->name('ranking.')->controller(RangkingController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/get-ranking-presensi', 'getRanking')->name('kehadiran.filter');
+    });
 });
 Route::middleware(['auth:web'])->group(function () {
     Route::resource('kelas', KelasController::class);
@@ -70,7 +73,7 @@ Route::middleware(['auth:web'])->group(function () {
 });
 
 // Route::middleware([EnsureUserIsGuru::class, EnsureUserIsWalikelas::class])->group(function () {});
-Route::middleware(['auth:gurus,wali', 'verified'])->group(function () {
+Route::middleware(['auth:gurus,wali,web', 'verified'])->group(function () {
     Route::prefix('laporan-siswa')->name('laporan-siswa.')->controller(LaporanSiswaController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/preview-siswa', 'preview_pdf')->name('viewSiswa');
@@ -94,7 +97,7 @@ Route::middleware(['auth:gurus,wali', 'verified'])->group(function () {
     });
 });
 
-Route::middleware(['auth:gurus', 'verified'])->group(function () {
+Route::middleware(['auth:gurus,web', 'verified'])->group(function () {
     Route::prefix('laporan-guru')->name('laporan-guru.')->controller(LaporanGuruController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/preview-guru', 'view_pdf')->name('viewGuru');
@@ -125,22 +128,37 @@ Route::middleware(['auth:wali,guru_piket', 'verified'])->group(function () {
 });
 Route::middleware(['auth:web,guru_piket,wali', 'verified'])->group(function () {
     Route::resource('guru-piket', GuruPiketController::class);
+    Route::resource('siswa', SiswaController::class);
 });
-
 Route::middleware(['auth:web,wali,guru_piket,gurus', 'verified'])->group(function () {
-    Route::prefix('ranking-kehadiran')->name('ranking.')->controller(RangkingController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::get('/get-ranking-presensi', 'getRanking')->name('kehadiran.filter');
-    });
+    Route::resource('mapel', MapelController::class);
     Route::prefix('akun')->name('akun.')->controller(AkunController::class)->group(function () {
         Route::get('/', 'index');
         Route::patch('/update-profil', 'update_profil')->name('updateProfil');
         Route::patch('/update-data/{id}', 'update_data')->name('updateData');
+        Route::delete('/delete-foto-profil', 'delete_profil')->name('deleteProfil');
     });
     Route::prefix('jadwal-kelas')->name('jadwal.')->controller(JadwalController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/detail/{id}', 'show_kelas')->name('detail');
     });
+});
+Route::get('/get-model', function () {
+    $modelPath = base_path('face_training/face_model.h5'); // Menyesuaikan path model
+    if (file_exists($modelPath)) {
+        return Response::download($modelPath);
+    } else {
+        return response()->json(['error' => 'Model file not found'], 404);
+    }
+});
+
+Route::get('/get-label-encoder', function () {
+    $labelEncoderPath = base_path('face_training/label_encoder.json'); // Menyesuaikan path label encoder
+    if (file_exists($labelEncoderPath)) {
+        return Response::download($labelEncoderPath);
+    } else {
+        return response()->json(['error' => 'Label encoder file not found'], 404);
+    }
 });
 Route::get('/not-authorized', function () {
     return view('errors.unauthorized');

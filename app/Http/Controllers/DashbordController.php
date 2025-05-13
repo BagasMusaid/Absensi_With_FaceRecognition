@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\presensi\StoreJadwalPresensi;
 use App\Models\master_data\Mapel;
+use App\Models\master_data\TahunAjaran;
 use App\Models\presensi\JadwalPresensi;
 use App\Models\presensi\presensi;
 use Carbon\Carbon;
@@ -48,8 +49,10 @@ class DashbordController extends Controller
         $siswas = Siswa::count();
         $PresensiHariIni = presensi::whereDate('tanggal', Carbon::today())->count();
         $Mapels = Mapel::count();
+        $tahunAjaran = TahunAjaran::where('status', 'aktif')->first();
+        $tanggal = Carbon::now()->translatedFormat('l, d F Y');
 
-        return view('dashbord', compact('kelas', 'gurus', 'siswas', 'greeting', 'PresensiHariIni', 'Mapels', 'kelasDenganJadwalHariIni'));
+        return view('dashbord', compact('kelas', 'gurus', 'siswas', 'greeting', 'PresensiHariIni', 'Mapels', 'kelasDenganJadwalHariIni', 'tahunAjaran', 'tanggal'));
     }
     public function store_jadwal(StoreJadwalPresensi $request)
     {

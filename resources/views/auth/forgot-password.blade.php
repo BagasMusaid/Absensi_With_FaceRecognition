@@ -33,6 +33,24 @@
                                     <small class="mt-1 ml-1 text-xs text-red-600 dark:text-red-500">{{ $message }}</small>
                                 @enderror
                             </div>
+                            <div class="w-full mt-2.5">
+                                <label for="guard" class="block text-gray-700 text-sm font-medium mb-2">
+                                    Pilih Akun
+                                </label>
+                                <select id="guard" name="guard"
+                                    class="block appearance-none w-full bg-gray-50 border rounded-lg border-gray-300 text-gray-700 py-2.5 px-3 pr-8 leading-tight  p-2.5 focus:outline-none focus:bg-white focus:border-indigo-500">
+                                    <option value="" disabled {{ old('guard') ? '' : 'selected' }}>Pilih Akun Yang
+                                        Direset</option>
+                                    <option value="web">Admin</option>
+                                    <option value="gurus">
+                                        Kepala Sekolah
+                                    </option>
+                                    <option value="wali">
+                                        Walikelas</option>
+                                    <option value="guru_piket">
+                                        Guru Piket</option>
+                                </select>
+                            </div>
                             <div class="flex mt-3 md:mt-4 justify-center">
                                 <button type="submit"
                                     class=" w-10/12 text-center px-4 py-2 text-sm font-medium  text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">

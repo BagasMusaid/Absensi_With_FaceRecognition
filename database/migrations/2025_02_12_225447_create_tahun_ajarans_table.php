@@ -16,6 +16,7 @@ return new class extends Migration
             $table->year('tahun_mulai');
             $table->year('tahun_selesai');
             $table->enum('semester', ['ganjil', 'genap']);
+            $table->enum('status', ['aktif', 'tidak'])->default('tidak');
             $table->timestamps();
         });
     }

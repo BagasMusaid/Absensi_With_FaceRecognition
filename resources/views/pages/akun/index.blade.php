@@ -76,7 +76,7 @@
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d=" M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0
-                                                                                                                                                                                                                                                                                                                                                                                                            1 2 2z" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1 2 2z" />
                                     <circle cx="12" cy="13" r="4" />
                                 </svg>
                             </a>
@@ -88,8 +88,13 @@
                             Profil</a>
                     </div>
                     <div class="flex justify-center mt-2 cursor-pointer">
-                        <a href="{{ url('') }}" class="text-center font-semibold text-red-600 text-sm ">Delete
-                            Profil</a>
+                        <form action="{{ route('akun.deleteProfil') }}" method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus foto profil?')" class="delete-profil">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-center font-semibold text-red-600 text-sm ">Delete
+                                Profil</button>
+                        </form>
                     </div>
                 </div>
                 <div class=" w-full md:ml-24 mt-5">

@@ -136,7 +136,8 @@ class SiswaController extends Controller
     public function filterByKelas($kelasId)
     {
         $siswa = Siswa::with('kelas')->where('kelas_id', $kelasId)->paginate(5);
+        $kelas = kelas::all();
 
-        return view('pages.siswa.filtered-kelas', compact('siswa'))->render();
+        return view('pages.siswa.filtered-kelas', compact('siswa', 'kelas'))->render();
     }
 }

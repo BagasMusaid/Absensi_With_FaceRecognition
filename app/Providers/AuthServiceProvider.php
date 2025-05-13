@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\presensi\Guru;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -37,11 +40,21 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('akses-kepala_sekolah', function ($user) {
-            return auth()->guard('gurus')->check() && $user?->kepalasekolah == 'ya';
+            return auth()->guard('gurus')->check() && $user?->kepalasekolah == 'ya'
+                || auth()->guard('web')->check();
         });
         Gate::define('akses-dashbord', function ($user) {
-            return auth()->guard('wali')->check()
-                || auth()->guard('guru_piket')->check();
+            $hariIni = Carbon::now()->isoFormat('dddd'); // contoh: 'Senin', 'Selasa', dst.
+            // Jika guard wali, izinkan
+            if (Auth::guard('wali')->check()) {
+                return true;
+            }
+            // Jika guard guru_piket, cek harinya
+            if (Auth::guard('guru_piket')->check()) {
+                $guru = $user;
+                return strtolower($guru->hari) === strtolower($hariIni);
+            }
+            return false;
         });
         Gate::define('akses-siswa', function ($user) {
             return auth()->guard('wali')->check()
@@ -67,11 +80,17 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('akses-laporan', function ($user) {
             return (auth()->guard('gurus')->check() && $user->kepalasekolah == 'ya')
-                || auth()->guard('wali')->check();
+                || auth()->guard('wali')->check()
+                || auth()->guard('web')->check();
         });
         Gate::define('akses-presensi', function ($user) {
             return auth()->guard('guru_piket')->check()
                 || auth()->guard('wali')->check();
+        });
+        Gate::define('akses-ranking', function ($user) {
+            return auth()->guard('gurus')->check() && $user?->kepalasekolah == 'ya'
+                || auth()->guard('wali')->check()
+                || auth()->guard('web')->check();
         });
     }
 }
